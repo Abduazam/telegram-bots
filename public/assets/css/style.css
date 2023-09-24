@@ -1,0 +1,63 @@
+:root {
+    --border-grey: #d8e1e1;
+    --table-bg: hsla(220,9%,46%,.05);
+    --scroll-bg: #6c757d;
+}
+
+/**
+ * Table css.
+ */
+.own-table thead tr {
+    border: 1px solid var(--border-grey);
+    background: var(--table-bg);
+}
+.own-table thead tr {
+    border-radius: 15px!important;
+}
+.own-table tbody tr {
+    border: 1px solid var(--border-grey);
+    border-top: none;
+}
+.own-table thead tr th,
+.own-table tbody tr td {
+    border-right: 1px solid var(--border-grey);
+    padding: 5px 12px;
+    font-size: 14px;
+}
+.table-responsive::-webkit-scrollbar {
+    width: 0;
+    height: 3px;
+    background-color: var(--scroll-bg);
+}
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
+
+/**
+ * Pagination buttons css.
+ */
+.pagination {
+    margin-bottom: 0;
+}
+.pagination .page-item .page-link {
+    padding: 3px 10px;
+    font-size: 14px;
+    border: none;
+}
+
+/**
+ * Button sm css.
+ */
+.btn-sm {
+    padding: 3px 7px!important;
+}
+.btn-sm i {
+    font-size: 13px;
+}
+
+/**
+ * Global classes css.
+ */
+.cursor-pointer {
+    cursor: pointer;
+}
