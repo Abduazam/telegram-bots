@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\Bots\BotUsers\BotUserCreated;
+use App\Listeners\Bots\BotUsers\BotUserCreatedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -17,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        BotUserCreated::class => [
+            BotUserCreatedListener::class,
         ],
     ];
 

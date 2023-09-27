@@ -13,8 +13,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            Users\AdminSeeder::class,
-            Features\Languages\DefaultLanguage::class
+            // DASHBOARD
+            Dashboard\Users\AdminSeeder::class,
+
+            // BOTS
+            Bots\PhoneNumberCodes\DefaultCountryPhoneNumberCodesSeeder::class,
+            Bots\BotTexts\DefaultBotTextsSeeder::class,
+            Bots\Categories\DefaultBotCategoriesSeeder::class,
         ]);
     }
 }

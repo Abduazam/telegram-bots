@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Helpers;
 
-use App\Helpers\Classes\Breadcrumbs\Segment;
+use App\Helpers\Dashboard\Classes\Breadcrumbs\Segment;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
