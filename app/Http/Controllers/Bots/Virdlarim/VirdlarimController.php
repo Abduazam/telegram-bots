@@ -22,6 +22,7 @@ class VirdlarimController extends BotsController
     protected BotUser $user;
     protected ?string $text = null;
     protected int $message_id;
+    protected string|bool $message_type;
     protected int $step_one;
     protected int $step_two;
 
@@ -31,6 +32,7 @@ class VirdlarimController extends BotsController
         $this->user = (new BotUserFindService($this->telegram))->find();
         $this->text = $this->telegram->Text();
         $this->message_id = $this->telegram->MessageID();
+        $this->message_type = $this->telegram->getUpdateType();
         $this->step_one = $this->user->steps->step_one;
         $this->step_two = $this->user->steps->step_two;
     }
@@ -74,7 +76,9 @@ class VirdlarimController extends BotsController
                 $this->telegram->deleteMessage(['chat_id' => $this->user->chat_id, 'message_id' => $this->message_id]);
 
                 if ($this->step_one === 3) {
-                    if ($this->step_two === 3) {
+                    if ($this->step_two === 3 or $this->step_two === 4) {
+                        (new BotUserTaskDeleteService($this->user))->forceDelete();
+                        $this->telegram->sendMessage(Message::operationCancelled($this->user->chat_id));
                         $this->user->updateSteps(3, 0);
                         $this->telegram->sendMessage(Message::addTasksMessage($this->user->chat_id, $this->user));
                     }
@@ -115,7 +119,7 @@ class VirdlarimController extends BotsController
                     if ($this->text === 'user-add-category-button') {
                         $this->user->updateSteps(3, 1);
                         $this->telegram->sendMessage(Message::addUserCategoryMessage($this->user->chat_id));
-                    } else {
+                    } else if ($this->message_type == $this->telegram::CALLBACK_QUERY) {
                         $this->user->updateSteps(3, 2);
                         $this->telegram->sendMessage(Message::addTaskToCategory($this->user->chat_id, $this->text, $this->user));
                     }
@@ -154,6 +158,9 @@ class VirdlarimController extends BotsController
                 if ($this->step_two === 4) {
                     if (isset($this->text) and (new TaskScheduleTimeCheckRule($this->text))()) {
                         (new BotUserTaskUpdateService($this->user, $this->text))->updateScheduleTask();
+                        $this->user->updateSteps(3, 5);
+                        $this->telegram->sendMessage(Message::addTasksFiles($this->user->chat_id));
+                    } else if ($this->text === 'next-step-button') {
                         $this->user->updateSteps(3, 5);
                         $this->telegram->sendMessage(Message::addTasksFiles($this->user->chat_id));
                     } else {
@@ -198,7 +205,7 @@ class VirdlarimController extends BotsController
                     } else if ($this->text === 'next-step-button') {
                         $this->telegram->deleteMessage(['chat_id' => $this->user->chat_id, 'message_id' => $this->message_id]);
                         $this->user->updateSteps(3, 6);
-                        $this->telegram->sendMessage(Message::getTask($this->user->chat_id, $this->user));
+                        $this->telegram->sendMessage(Message::getTask($this->user));
                     } else {
                         $this->telegram->deleteMessage(['chat_id' => $this->user->chat_id, 'message_id' => $this->message_id]);
                     }

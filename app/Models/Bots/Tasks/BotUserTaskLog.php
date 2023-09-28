@@ -44,7 +44,7 @@ class BotUserTaskLog extends Model
 
     public function task(): BelongsTo
     {
-        return $this->belongsTo(BotUserTask::class);
+        return $this->belongsTo(BotUserTask::class, 'bot_user_task_id');
     }
 
     public function isBotCategory(): bool

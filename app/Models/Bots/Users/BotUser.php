@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $phone_number
  * @property boolean $is_view
  * @property int $active
- * @property HasOne $steps
  */
 class BotUser extends Model
 {
@@ -59,7 +58,7 @@ class BotUser extends Model
 
     public function categories(): HasMany
     {
-        return $this->hasMany(BotUserCategory::class, 'bot_user_id');
+        return $this->hasMany(BotUserCategory::class);
     }
 
     public function updateSteps(int $step_one, int $step_two): void

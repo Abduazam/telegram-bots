@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\Bots\General\Buttons;
+namespace App\Helpers\Bots\General\Buttons\Categories;
 
 use App\Helpers\Bots\General\Texts\GetTextTranslations;
 

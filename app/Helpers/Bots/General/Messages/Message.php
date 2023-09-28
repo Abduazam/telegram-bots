@@ -2,15 +2,13 @@
 
 namespace App\Helpers\Bots\General\Messages;
 
-use App\Contracts\Traits\Bots\Helpers\Messages\TasksTrait;
+use App\Contracts\Traits\Bots\Helpers\Messages\AuthenticationTrait;
+use App\Contracts\Traits\Bots\Helpers\Messages\CategoriesTrait;
 use App\Contracts\Traits\Bots\Helpers\Messages\HandbookTrait;
 use App\Contracts\Traits\Bots\Helpers\Messages\MainMenuTrait;
-use App\Contracts\Traits\Bots\Helpers\Messages\CategoriesTrait;
-use App\Contracts\Traits\Bots\Helpers\Messages\AuthenticationTrait;
+use App\Contracts\Traits\Bots\Helpers\Messages\OperationRequestTrait;
 use App\Contracts\Traits\Bots\Helpers\Messages\RequestButtonsTrait;
-use App\Helpers\Bots\General\Buttons\CancelButton;
-use App\Helpers\Bots\General\Buttons\NextStepButton;
-use App\Helpers\Bots\General\Texts\GetTextTranslations;
+use App\Contracts\Traits\Bots\Helpers\Messages\TasksTrait;
 
 class Message
 {
@@ -20,6 +18,7 @@ class Message
     use CategoriesTrait;
     use RequestButtonsTrait;
     use AuthenticationTrait;
+    use OperationRequestTrait;
 
     public static function testMessage(int $chat_id, string $text): array
     {

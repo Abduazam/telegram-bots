@@ -21,7 +21,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="">
     <!-- Stylesheets -->
     <link rel="stylesheet" id="css-main" href="/assets/css/codebase.min.css">
-    <link rel="stylesheet" id="css-theme" href="/assets/css/themes/corporate.min.css">
     <link rel="stylesheet" id="css-theme" href="/assets/css/style.css">
 </head>
 <body>

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bot_user_steps', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Bots\Users\BotUser::class);
+            $table->foreignId('bot_user_id')->references('id')->on('bot_users')->onDelete('cascade');
             $table->smallInteger('step_one');
             $table->smallInteger('step_two');
             $table->timestamps();

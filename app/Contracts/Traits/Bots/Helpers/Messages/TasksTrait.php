@@ -3,19 +3,18 @@
 namespace App\Contracts\Traits\Bots\Helpers\Messages;
 
 use App\Models\Bots\Users\BotUser;
-use App\Models\Bots\Tasks\BotUserTask;
 use App\Models\Bots\Tasks\BotUserTaskLog;
 use App\Models\Bots\Categories\BotCategory;
 use App\Models\Bots\Categories\BotUserCategory;
-use App\Helpers\Bots\General\Buttons\BackButton;
-use App\Helpers\Bots\General\Buttons\DenyButton;
-use App\Helpers\Bots\General\Buttons\CancelButton;
-use App\Helpers\Bots\General\Buttons\ConfirmButton;
-use App\Helpers\Bots\General\Buttons\NextStepButton;
 use App\Helpers\Bots\General\Texts\GetTextTranslations;
+use App\Helpers\Bots\General\Buttons\Actions\BackButton;
+use App\Helpers\Bots\General\Buttons\Actions\DenyButton;
+use App\Helpers\Bots\General\Buttons\Actions\CancelButton;
+use App\Helpers\Bots\General\Buttons\Actions\ConfirmButton;
 use App\Contracts\Enums\Bots\General\BotCategoriesTypeEnum;
-use App\Helpers\Bots\General\Buttons\UserAddCategoryButton;
+use App\Helpers\Bots\General\Buttons\Actions\NextStepButton;
 use App\Helpers\Bots\General\Buttons\Categories\UserCategoriesButton;
+use App\Helpers\Bots\General\Buttons\Categories\UserAddCategoryButton;
 use App\Services\Bots\Models\Tasks\BotUserTaskLogs\BotUserTaskLogCreateService;
 
 trait TasksTrait
@@ -118,23 +117,25 @@ trait TasksTrait
         ];
     }
 
-    public static function getTask(int $chat_id, BotUser $user, ?int $task_id = null): array
+    public static function getTask(BotUser $user, ?int $task_id = null): array
     {
-        if (!isset($task_id)) {
-            $log = BotUserTaskLog::where('bot_user_id', $user->id)->first();
-            $task = BotUserTask::where('id', $log->bot_user_task_id)->where('bot_user_id', $user->id)->first();
+        if (is_null($task_id)) {
+            $log = BotUserTaskLog::with(['task' => function ($query) {
+                $query->with(['category.translation', 'user_category'])->first();
+            }])->where('bot_user_id', $user->id)->first();
 
-            if ($task->category) {
-                $category = $task->category->translation->getTranslation();
+
+            if ($log->task->category) {
+                $category = $log->task->category->translation->getTranslation();
             } else {
-                $category = $task->user_category->getTranslation();
+                $category = $log->task->user_category->getTranslation();
             }
         }
 
-        $text = "<b>Вирд:</b> {$task->getDescription()}\n<b>Категория:</b> {$category}\n<b>Кунлик қиймати:</b> {$task->amount}\n<b>Эслатиш вақти:</b> {$task->getScheduleTime()}\n<b>Файллар:</b> {$task->files()->count()}";
+        $text = "<b>Вирд:</b> {$log->task->getDescription()}\n<b>Категория:</b> {$category}\n<b>Кунлик қиймати:</b> {$log->task->amount}\n<b>Эслатиш вақти:</b> {$log->task->getScheduleTime()}\n<b>Файллар:</b> {$log->task->files()->count()}";
 
         return [
-            'chat_id' => $chat_id,
+            'chat_id' => $user->chat_id,
             'text' => $text,
             'parse_mode' => 'html',
             'reply_markup' => json_encode([

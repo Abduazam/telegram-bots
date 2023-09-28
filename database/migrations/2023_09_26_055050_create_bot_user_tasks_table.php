@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('bot_user_tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Bots\Users\BotUser::class);
-            $table->foreignIdFor(\App\Models\Bots\Categories\BotCategory::class)->nullable();
-            $table->foreignIdFor(\App\Models\Bots\Categories\BotUserCategory::class)->nullable();
+            $table->foreignId('bot_user_id')->references('id')->on('bot_users')->onDelete('cascade');
+            $table->foreignId('bot_category_id')->nullable()->references('id')->on('bot_categories')->nullOnDelete();
+            $table->foreignId('bot_user_category_id')->nullable()->references('id')->on('bot_user_categories')->nullOnDelete();
             $table->string('description');
             $table->integer('amount')->nullable();
             $table->time('schedule_time')->nullable();

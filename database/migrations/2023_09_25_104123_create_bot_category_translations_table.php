@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bot_category_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Bots\Categories\BotCategory::class);
+            $table->foreignId('bot_category_id')->references('id')->on('bot_categories')->onDelete('cascade');
             $table->string('locale');
             $table->string('translation')->nullable();
             $table->timestamps();

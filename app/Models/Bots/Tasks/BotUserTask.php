@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $bot_category_id
  * @property int $bot_user_category_id
  * @property string $description
+ * @property int $amount
  * @property string $schedule_time
  * @property boolean $active
  */
@@ -41,12 +42,12 @@ class BotUserTask extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(BotCategory::class, 'id');
+        return $this->belongsTo(BotCategory::class, 'bot_category_id');
     }
 
     public function user_category(): BelongsTo
     {
-        return $this->belongsTo(BotUserCategory::class);
+        return $this->belongsTo(BotUserCategory::class,  'bot_user_category_id');
     }
 
     public function getDescription(): bool|string
@@ -54,9 +55,9 @@ class BotUserTask extends Model
         return base64_decode($this->description);
     }
 
-    public function getScheduleTime(): string
+    public function getScheduleTime(): ?string
     {
-        return date('H:i', strtotime($this->schedule_time));
+        return !is_null($this->schedule_time) ? date('H:i', strtotime($this->schedule_time)) : null;
     }
 
     public function isActive(): bool

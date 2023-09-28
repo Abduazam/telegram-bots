@@ -2,8 +2,7 @@
 
 namespace App\Contracts\Traits\Bots\Helpers\Messages;
 
-use App\Helpers\Bots\General\Buttons\BackButton;
-use App\Helpers\Bots\General\Texts\GetTextTranslations;
+use App\Helpers\Bots\General\Buttons\Actions\BackButton;
 
 trait HandbookTrait
 {
