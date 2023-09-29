@@ -28,13 +28,17 @@ class VirdlarimController extends BotsController
 
     public function __construct()
     {
-        $this->telegram = new Telegram(config('telegram.tokens.virdlarim'));
-        $this->user = (new BotUserFindService($this->telegram))->find();
-        $this->text = $this->telegram->Text();
-        $this->message_id = $this->telegram->MessageID();
-        $this->message_type = $this->telegram->getUpdateType();
-        $this->step_one = $this->user->steps->step_one;
-        $this->step_two = $this->user->steps->step_two;
+        if (app()->runningInConsole()) {
+            return;
+        } else {
+            $this->telegram = new Telegram(config('telegram.tokens.virdlarim'));
+            $this->user = (new BotUserFindService($this->telegram))->find();
+            $this->text = $this->telegram->Text();
+            $this->message_id = $this->telegram->MessageID();
+            $this->message_type = $this->telegram->getUpdateType();
+            $this->step_one = $this->user->steps->step_one;
+            $this->step_two = $this->user->steps->step_two;
+        }
     }
 
     public function index(): void
