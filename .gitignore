@@ -17,3 +17,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Ignore seeders and factories
+/database/seeders/Bots/BotUsers/
+/database/factories/Bots/BotUserTasks
