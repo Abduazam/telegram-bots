@@ -2,30 +2,47 @@
 
 namespace App\Services\Bots\Models\Tasks\BotUserTasks;
 
+use Exception;
+use Illuminate\Support\Facades\DB;
 use App\Models\Bots\Tasks\BotUserTask;
-use App\Models\Bots\Tasks\BotUserTaskLog;
-use App\Models\Bots\Users\BotUser;
+use App\Events\Bots\BotUserLog\UpdateBotUserLogToNull;
 
 class BotUserTaskDeleteService
 {
-    protected BotUserTask $task;
 
-    public function __construct(BotUser $user, ?int $task_id = null) {
-        if (is_null($task_id)) {
-            $log = BotUserTaskLog::where('bot_user_id', $user->id)->first();
-            $this->task = BotUserTask::where('id', $log->bot_user_task_id)->first();
-        } else {
-            $this->task = BotUserTask::where('id', $task_id)->first();
+    public function __construct(protected BotUserTask $task) { }
+
+    public function delete(): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            $this->task->delete();
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $exception) {
+            DB::rollBack();
+            info($exception);
+            return false;
         }
     }
 
-    public function delete(): void
+    public function forceDelete(): bool
     {
-        $this->task->delete();
-    }
+        try {
+            DB::beginTransaction();
 
-    public function forceDelete(): void
-    {
-        $this->task->forceDelete();
+            $this->task->forceDelete();
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $exception) {
+            DB::rollBack();
+            info($exception);
+            return false;
+        }
     }
 }

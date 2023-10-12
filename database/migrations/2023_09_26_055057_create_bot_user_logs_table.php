@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bot_user_categories', function (Blueprint $table) {
+        Schema::create('bot_user_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bot_user_id')->references('id')->on('bot_users')->onDelete('cascade');
-            $table->string('translation')->nullable();
+            $table->foreignId('bot_category_id')->nullable()->references('id')->on('bot_categories')->nullOnDelete();
+            $table->foreignId('bot_user_task_id')->nullable()->references('id')->on('bot_user_tasks')->nullOnDelete();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bot_user_categories');
+        Schema::dropIfExists('user_task_logs');
     }
 };

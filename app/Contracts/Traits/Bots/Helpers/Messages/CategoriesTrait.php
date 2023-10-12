@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Traits\Bots\Helpers\Messages;
 
-use App\Helpers\Bots\General\Buttons\Actions\BackButton;
+use App\Helpers\Bots\General\Buttons\Inline\Actions\BackButton;
 use App\Helpers\Bots\General\Texts\GetTextTranslations;
 
 trait CategoriesTrait

@@ -4,35 +4,36 @@ namespace App\Services\Bots\Models\Tasks\BotUserTasks;
 
 use App\Models\Bots\Users\BotUser;
 use App\Models\Bots\Tasks\BotUserTask;
-use App\Models\Bots\Tasks\BotUserTaskLog;
-use App\Services\Bots\Models\Tasks\BotUserTaskLogs\BotUserTaskLogUpdateService;
+use App\Services\Bots\Models\BotUserLogs\BotUserLogUpdateService;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class BotUserTaskCreateService
 {
     public function __construct(
         protected BotUser $user,
-        protected ?string $text = null,
     ) { }
 
-    public function createTextTask(): void
+    public function createTaskDescription(string $text): bool
     {
-        $log = BotUserTaskLog::where('bot_user_id', $this->user->id)->first();
+        try {
+            DB::beginTransaction();
 
-        if (isset($this->text)) {
-            $create_array = [
+            $task = BotUserTask::create([
                 'bot_user_id' => $this->user->id,
-                'description' => base64_encode($this->text),
-            ];
+                'bot_category_id' => $this->user->log->bot_category_id,
+                'description' => base64_encode($text),
+            ]);
 
-            if ($log->isBotCategory()) {
-                $create_array['bot_category_id'] = $log->bot_category_id;
-            } else {
-                $create_array['bot_user_category_id'] = $log->bot_user_category_id;
-            }
+            (new BotUserLogUpdateService($this->user->log))->updateTaskId($task->id);
 
-            $task = BotUserTask::create($create_array);
+            DB::commit();
 
-            (new BotUserTaskLogUpdateService($log))->taskUpdate($task);
+            return true;
+        } catch (Exception $exception) {
+            DB::rollBack();
+            info($exception);
+            return false;
         }
     }
 }

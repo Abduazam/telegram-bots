@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('bot_categories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('bot_user_id')->nullable()->references('id')->on('bot_users')->onDelete('cascade');
             $table->string('slug', 50);
+            $table->string('title');
             $table->timestamps();
             $table->softDeletes();
         });

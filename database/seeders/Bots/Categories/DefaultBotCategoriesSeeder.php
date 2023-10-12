@@ -22,14 +22,9 @@ class DefaultBotCategoriesSeeder extends Seeder
         ];
 
         foreach ($categories as $key => $value) {
-            $category = BotCategory::create([
+            BotCategory::create([
                 'slug' => $key,
-            ]);
-
-            BotCategoryTranslation::create([
-                'bot_category_id' => $category->id,
-                'locale' => 'cy',
-                'translation' => base64_encode($value)
+                'title' => base64_encode($value)
             ]);
         }
     }

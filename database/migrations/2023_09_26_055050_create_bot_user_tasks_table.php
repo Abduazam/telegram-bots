@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bot_user_id')->references('id')->on('bot_users')->onDelete('cascade');
             $table->foreignId('bot_category_id')->nullable()->references('id')->on('bot_categories')->nullOnDelete();
-            $table->foreignId('bot_user_category_id')->nullable()->references('id')->on('bot_user_categories')->nullOnDelete();
             $table->string('description');
             $table->integer('amount')->nullable();
             $table->time('schedule_time')->nullable();

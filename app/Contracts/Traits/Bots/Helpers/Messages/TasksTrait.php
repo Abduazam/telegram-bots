@@ -3,158 +3,83 @@
 namespace App\Contracts\Traits\Bots\Helpers\Messages;
 
 use App\Models\Bots\Users\BotUser;
-use App\Models\Bots\Tasks\BotUserTaskLog;
+use App\Models\Bots\Tasks\BotUserTask;
 use App\Models\Bots\Categories\BotCategory;
-use App\Models\Bots\Categories\BotUserCategory;
 use App\Helpers\Bots\General\Texts\GetTextTranslations;
-use App\Helpers\Bots\General\Buttons\Actions\BackButton;
-use App\Helpers\Bots\General\Buttons\Actions\DenyButton;
-use App\Helpers\Bots\General\Buttons\Actions\CancelButton;
-use App\Helpers\Bots\General\Buttons\Actions\ConfirmButton;
-use App\Contracts\Enums\Bots\General\BotCategoriesTypeEnum;
-use App\Helpers\Bots\General\Buttons\Actions\NextStepButton;
-use App\Helpers\Bots\General\Buttons\Categories\UserCategoriesButton;
-use App\Helpers\Bots\General\Buttons\Categories\UserAddCategoryButton;
-use App\Services\Bots\Models\Tasks\BotUserTaskLogs\BotUserTaskLogCreateService;
+use App\Helpers\Bots\General\Buttons\Inline\Actions\DenyButton;
+use App\Helpers\Bots\General\Buttons\Inline\Actions\BackButton;
+use App\Helpers\Bots\General\Buttons\Inline\Actions\ChangeButton;
+use App\Services\Bots\Models\BotUserLogs\BotUserLogCreateService;
+use App\Helpers\Bots\General\Buttons\Inline\Actions\ConfirmButton;
+use App\Helpers\Bots\General\Buttons\Inline\Actions\NextStepButton;
+use App\Helpers\Bots\General\Buttons\Inline\Categories\UserCategoriesButton;
 
 trait TasksTrait
 {
-    public static function addTasksMessage(int $chat_id, ?BotUser $user = null): array
+    public static function addTaskToCategoryMessage(BotUser $user, string $category_id): array
     {
-        $additionalButtons = [
-            [
-                (new BackButton())(),
-                (new UserAddCategoryButton())(),
-            ],
-        ];
+        $category = BotCategory::find($category_id);
+
+        (new BotUserLogCreateService($user, $category->id))();
 
         return [
-            'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('user-choose-category-text'),
-            'parse_mode' => 'html',
-            'reply_markup' => json_encode([
-                'inline_keyboard' => (new UserCategoriesButton($additionalButtons, $user))()
-            ])
-        ];
-    }
-
-    public static function addTaskToCategory(int $chat_id, string $category_callback, BotUser $user): array
-    {
-        $data = explode('_', $category_callback);
-        if (count($data) === 3) {
-            $category = BotUserCategory::where('id', $data[2])->first();
-            $class = BotCategoriesTypeEnum::BOT_USER_CATEGORY;
-            $category_name = $category->getTranslation();
-        } else {
-            $category = BotCategory::where('id', $data[1])->first();
-            $class = BotCategoriesTypeEnum::BOT_CATEGORY;
-            $category_name = $category->translation->getTranslation();
-        }
-
-        (new BotUserTaskLogCreateService($category, $class, $user))();
-
-        return [
-            'chat_id' => $chat_id,
-            'text' => "{$category_name} " . GetTextTranslations::getTextTranslation('add-task-to-category-text'),
+            'chat_id' => $user->chat_id,
+            'text' => "{$category->getTitle()} " . GetTextTranslations::getTextTranslation('add-task-to-category-text'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [
-                        (new BackButton())()
+                        (new BackButton())(),
                     ],
-                ],
+                ]
             ])
         ];
     }
 
-    public static function addTasksAmount(int $chat_id): array
+    public static function addTaskAmountMessage(int $chat_id): array
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('add-tasks-amount-text'),
+            'text' => GetTextTranslations::getTextTranslation('add-task-amount-text'),
             'parse_mode' => 'html',
-            'reply_markup' => json_encode([
-                'inline_keyboard' => [
-                    [
-                        (new CancelButton())()
-                    ],
-                ],
-            ])
         ];
     }
 
-    public static function addTasksSchedule(int $chat_id): array
+    public static function addTaskScheduleMessage(int $chat_id): array
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('add-tasks-schedule-text'),
+            'text' => GetTextTranslations::getTextTranslation('add-task-schedule-text'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [
-                        (new CancelButton())(),
                         (new NextStepButton())(),
                     ],
-                ],
+                ]
             ])
         ];
     }
 
-    public static function addTasksFiles(int $chat_id): array
+    public static function getTask(BotUser $user): array
     {
-        return [
-            'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('add-tasks-files-text'),
-            'parse_mode' => 'html',
-            'reply_markup' => json_encode([
-                'inline_keyboard' => [
-                    [
-                        (new CancelButton())(),
-                        (new NextStepButton())(),
-                    ],
-                ],
-            ])
-        ];
-    }
-
-    public static function getTask(BotUser $user, ?int $task_id = null): array
-    {
-        if (is_null($task_id)) {
-            $log = BotUserTaskLog::with(['task' => function ($query) {
-                $query->with(['category.translation', 'user_category'])->first();
-            }])->where('bot_user_id', $user->id)->first();
-
-
-            if ($log->task->category) {
-                $category = $log->task->category->translation->getTranslation();
-            } else {
-                $category = $log->task->user_category->getTranslation();
-            }
-        }
-
-        $text = "<b>Вирд:</b> {$log->task->getDescription()}\n<b>Категория:</b> {$category}\n<b>Кунлик қиймати:</b> {$log->task->amount}\n<b>Эслатиш вақти:</b> {$log->task->getScheduleTime()}\n<b>Файллар:</b> {$log->task->files()->count()}";
+        $text = self::getTaskInfo($user->log->task);
 
         return [
             'chat_id' => $user->chat_id,
             'text' => $text,
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
-               'inline_keyboard' => [
-                   [
-                       (new DenyButton())(),
-                       (new ConfirmButton())(),
-                   ],
-               ],
+                'inline_keyboard' => [
+                    [
+                        (new ChangeButton())(),
+                    ],
+                    [
+                        (new DenyButton())(),
+                        (new ConfirmButton())(),
+                    ],
+                ],
             ])
-        ];
-    }
-
-    public static function taskDenied(int $chat_id): array
-    {
-        return [
-            'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('denied-text'),
-            'parse_mode' => 'html',
         ];
     }
 
@@ -167,11 +92,60 @@ trait TasksTrait
         ];
     }
 
-    public static function myTasksMessage(BotUser $user): array
+    public static function taskDenied(int $chat_id): array
+    {
+        return [
+            'chat_id' => $chat_id,
+            'text' => GetTextTranslations::getTextTranslation('denied-text'),
+            'parse_mode' => 'html',
+        ];
+    }
+
+    public static function taskSaved(int $chat_id): array
+    {
+        return [
+            'chat_id' => $chat_id,
+            'text' => GetTextTranslations::getTextTranslation('saved-but-not-active-text'),
+            'parse_mode' => 'html',
+        ];
+    }
+
+    public static function getTaskChangeMessage(BotUser $user): array
+    {
+        $text = self::getTaskInfo($user->log->task);
+
+        return [
+            'chat_id' => $user->chat_id,
+            'text' => "Ўзгартирмоқчи бўлган нарсангизни танланг\n\n$text",
+            'parse_mode' => 'html',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => [
+                    [
+                        ['text' => 'Вирд номи', 'callback_data' => 'description'],
+                        ['text' => 'Категорияси', 'callback_data' => 'category'],
+                    ],
+                    [
+                        ['text' => 'Қиймати', 'callback_data' => 'amount'],
+                        ['text' => 'Эслатиш вақти', 'callback_data' => 'schedule_time'],
+                    ],
+                    [
+                        (new BackButton())()
+                    ]
+                ],
+            ])
+        ];
+    }
+
+    private static function getTaskInfo(BotUserTask $task): string
+    {
+        return "<b>Вирд:</b> {$task->getDescription()}\n<b>Категория:</b> {$task->category->getTitle()}\n<b>Кунлик қиймати:</b> {$task->amount}\n<b>Эслатиш вақти:</b> {$task->getScheduleTime()}";
+    }
+
+    public static function changeTaskDescription(BotUser $user): array
     {
         return [
             'chat_id' => $user->chat_id,
-            'text' => "Ҳозирда бу бўлим ишламаяпти",
+            'text' => GetTextTranslations::getTextTranslation('change-task-description-text'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
@@ -181,5 +155,60 @@ trait TasksTrait
                 ],
             ])
         ];
+    }
+
+    public static function changeTaskAmount(BotUser $user): array
+    {
+        return [
+            'chat_id' => $user->chat_id,
+            'text' => GetTextTranslations::getTextTranslation('change-task-amount-text'),
+            'parse_mode' => 'html',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => [
+                    [
+                        (new BackButton())()
+                    ],
+                ],
+            ])
+        ];
+    }
+
+    public static function changeTaskSchedule(BotUser $user): array
+    {
+        return [
+            'chat_id' => $user->chat_id,
+            'text' => GetTextTranslations::getTextTranslation('change-task-schedule-text'),
+            'parse_mode' => 'html',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => [
+                    [
+                        (new BackButton())()
+                    ],
+                ],
+            ])
+        ];
+    }
+
+    public static function changeTaskCategory(BotUser $user): array
+    {
+        $additionalButtons = [
+            [
+                (new BackButton())(),
+            ],
+        ];
+
+        return [
+            'chat_id' => $user->chat_id,
+            'text' => GetTextTranslations::getTextTranslation('change-task-category-text'),
+            'parse_mode' => 'html',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => (new UserCategoriesButton($user, $additionalButtons))()
+            ])
+        ];
+    }
+
+    public static function getTaskNotificationInfo(BotUserTask $task): string
+    {
+        return "<b>{$task->category->getTitle()}</b> вақти\n\n<b>{$task->getDescription()}\n</b><b>Бажаришингиз керак:</b> {$task->amount}";
     }
 }

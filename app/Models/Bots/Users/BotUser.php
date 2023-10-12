@@ -2,7 +2,8 @@
 
 namespace App\Models\Bots\Users;
 
-use App\Models\Bots\Categories\BotUserCategory;
+use App\Contracts\Traits\Bots\Models\StatusChecker;
+use App\Models\Bots\Categories\BotCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class BotUser extends Model
 {
     use HasFactory, SoftDeletes;
+    use StatusChecker;
 
     protected $fillable = [
         'chat_id',
@@ -31,6 +33,9 @@ class BotUser extends Model
         'active',
     ];
 
+    /**
+     * BotUser model attribute getters.
+     */
     public function getFirstName(): string
     {
         return base64_decode($this->first_name);
@@ -41,16 +46,9 @@ class BotUser extends Model
         return base64_decode($this->username);
     }
 
-    public function isActive(): bool
-    {
-        return $this->active === 1;
-    }
-
-    public function isBlocked(): bool
-    {
-        return $this->active === 2;
-    }
-
+    /**
+     * BotUser model relations.
+     */
     public function steps(): HasOne
     {
         return $this->hasOne(BotUserStep::class);
@@ -58,7 +56,12 @@ class BotUser extends Model
 
     public function categories(): HasMany
     {
-        return $this->hasMany(BotUserCategory::class);
+        return $this->hasMany(BotCategory::class);
+    }
+
+    public function log(): HasOne
+    {
+        return $this->hasOne(BotUserLog::class);
     }
 
     public function updateSteps(int $step_one, int $step_two): void

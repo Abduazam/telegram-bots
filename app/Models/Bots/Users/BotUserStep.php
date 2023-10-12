@@ -2,8 +2,8 @@
 
 namespace App\Models\Bots\Users;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int $id
@@ -21,6 +21,9 @@ class BotUserStep extends Model
         'step_two',
     ];
 
+    /**
+     * BotUserStep model relations.
+     */
     public function user(): void
     {
         $this->belongsTo(BotUser::class);
