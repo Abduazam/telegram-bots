@@ -2,6 +2,8 @@
 
 namespace App\Contracts\Traits\Bots\Helpers\Messages;
 
+use App\Helpers\Bots\General\Buttons\Inline\Tasks\DeleteRestoreButton;
+use App\Helpers\Bots\General\Buttons\Inline\Tasks\ForceDeleteButton;
 use App\Models\Bots\Users\BotUser;
 use App\Models\Bots\Tasks\BotUserTask;
 use App\Models\Bots\Categories\BotCategory;
@@ -20,7 +22,7 @@ trait TasksTrait
     {
         $category = BotCategory::find($category_id);
 
-        (new BotUserLogCreateService($user, $category->id))();
+        (new BotUserLogCreateService($user, $category->id))->createByCategoryId();
 
         return [
             'chat_id' => $user->chat_id,
@@ -77,6 +79,30 @@ trait TasksTrait
                     [
                         (new DenyButton())(),
                         (new ConfirmButton())(),
+                    ],
+                ],
+            ])
+        ];
+    }
+
+    public static function getActiveTask(int $chat_id, int $id): array
+    {
+        $task = BotUserTask::where('id', $id)->withTrashed()->first();
+        $text = self::getTaskInfo($task);
+
+        return [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'parse_mode' => 'html',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => [
+                    [
+                        (new ChangeButton())(),
+                        (new DeleteRestoreButton())($task),
+                    ],
+                    [
+                        (new ForceDeleteButton())(),
+                        (new BackButton())(),
                     ],
                 ],
             ])

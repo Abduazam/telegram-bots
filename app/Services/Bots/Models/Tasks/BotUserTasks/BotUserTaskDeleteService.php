@@ -9,7 +9,6 @@ use App\Events\Bots\BotUserLog\UpdateBotUserLogToNull;
 
 class BotUserTaskDeleteService
 {
-
     public function __construct(protected BotUserTask $task) { }
 
     public function delete(): bool

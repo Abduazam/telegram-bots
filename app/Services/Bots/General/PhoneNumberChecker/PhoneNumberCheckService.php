@@ -2,8 +2,6 @@
 
 namespace App\Services\Bots\General\PhoneNumberChecker;
 
-use App\Models\Bots\Users\BotUser;
-use App\Contracts\Enums\Bots\General\BotUserActiveEnum;
 use App\Models\Bots\PhoneNumberCodes\CountryPhoneNumberCode;
 
 class PhoneNumberCheckService

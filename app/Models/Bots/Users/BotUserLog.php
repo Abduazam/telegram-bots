@@ -39,6 +39,6 @@ class BotUserLog extends Model
 
     public function task(): BelongsTo
     {
-        return $this->belongsTo(BotUserTask::class, 'bot_user_task_id');
+        return $this->belongsTo(BotUserTask::class, 'bot_user_task_id')->withTrashed();
     }
 }

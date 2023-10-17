@@ -4,6 +4,7 @@ namespace App\Models\Bots\Users;
 
 use App\Contracts\Traits\Bots\Models\StatusChecker;
 use App\Models\Bots\Categories\BotCategory;
+use App\Models\Bots\Tasks\BotUserTask;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -62,6 +63,11 @@ class BotUser extends Model
     public function log(): HasOne
     {
         return $this->hasOne(BotUserLog::class);
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(BotUserTask::class)->withTrashed();
     }
 
     public function updateSteps(int $step_one, int $step_two): void

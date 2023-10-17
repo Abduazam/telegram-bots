@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Bots\Virdlarim;
 
-use App\Models\Bots\Users\BotUser;
-use App\Models\Bots\Telegram\Telegram;
-use App\Http\Controllers\Bots\BotsController;
-use App\Helpers\Bots\General\Messages\Message;
+use App\Contracts\Enums\Bots\Models\BotUsers\BotUserActiveEnum;
 use App\Events\Bots\BotUserLog\UpdateBotUserLogToNull;
-use App\Contracts\Enums\Bots\General\BotUserActiveEnum;
-use App\Services\Bots\Models\BotUsers\BotUserFindService;
-use App\Services\Bots\Models\BotUsers\BotUserCreateService;
-use App\Services\Bots\Models\BotUsers\BotUserUpdateService;
+use App\Helpers\Bots\General\Messages\Message;
 use App\Helpers\Bots\General\Rules\TaskScheduleTimeCheckRule;
+use App\Http\Controllers\Bots\BotsController;
+use App\Models\Bots\Telegram\Telegram;
+use App\Models\Bots\Users\BotUser;
+use App\Services\Bots\Models\BotUserLogs\BotUserLogCreateService;
+use App\Services\Bots\Models\BotUsers\BotUserCreateService;
+use App\Services\Bots\Models\BotUsers\BotUserFindService;
+use App\Services\Bots\Models\BotUsers\BotUserUpdateService;
 use App\Services\Bots\General\PhoneNumberChecker\PhoneNumberCheckService;
 use App\Services\Bots\Models\Tasks\BotUserTasks\BotUserTaskCreateService;
 use App\Services\Bots\Models\Tasks\BotUserTasks\BotUserTaskDeleteService;
+use App\Services\Bots\Models\Tasks\BotUserTasks\BotUserTaskRestoreService;
 use App\Services\Bots\Models\Tasks\BotUserTasks\BotUserTaskUpdateService;
 use App\Services\Bots\Models\Categories\BotUserCategories\BotUserCategoryCreateService;
 
@@ -100,13 +102,31 @@ class VirdlarimController extends BotsController
                     }
 
                     if ($this->step_two === 6) {
-                        $this->user->updateSteps(2, 5);
-                        $this->telegram->sendMessage(Message::getTask($this->user));
+                        if ($this->user->log->task->active) {
+                            $this->user->updateSteps(3, 1);
+                            $this->telegram->sendMessage(Message::getActiveTask($this->user->chat_id, $this->user->log->bot_user_task_id));
+                        } else {
+                            $this->user->updateSteps(2, 5);
+                            $this->telegram->sendMessage(Message::getTask($this->user));
+                        }
                     }
 
                     if ($this->step_two === 7) {
                         $this->user->updateSteps(2, 6);
                         $this->telegram->sendMessage(Message::getTaskChangeMessage($this->user));
+                    }
+                }
+
+                if ($this->step_one === 3) {
+                    if ($this->step_two === 0) {
+                        $this->user->updateSteps(1, 0);
+                        $this->telegram->sendMessage(Message::mainMenuMessage($this->user->chat_id));
+                    }
+
+                    if ($this->step_two === 1) {
+                        $this->user->updateSteps(3, 0);
+                        UpdateBotUserLogToNull::dispatch($this->user);
+                        $this->telegram->sendMessage(Message::myTasksSectionMessage($this->user));
                     }
                 }
 
@@ -123,6 +143,11 @@ class VirdlarimController extends BotsController
                     if ($this->text === 'add-tasks-button') {
                         $this->user->updateSteps(2, 0);
                         $this->telegram->sendMessage(Message::addTasksSectionMessage($this->user));
+                    }
+
+                    if ($this->text === 'my-tasks-button') {
+                        $this->user->updateSteps(3, 0);
+                        $this->telegram->sendMessage(Message::myTasksSectionMessage($this->user));
                     }
                 }
             }
@@ -321,6 +346,61 @@ class VirdlarimController extends BotsController
                             $this->telegram->sendMessage(Message::getTaskChangeMessage($this->user));
                         } else {
                             $this->telegram->sendMessage(Message::somethingWentWrong($this->user->chat_id));
+                        }
+                    }
+                }
+            }
+
+            /**
+             * My tasks.
+             */
+            if ($this->step_one === 3) {
+                if ($this->step_two === 0) {
+                    $this->telegram->deleteMessage(['chat_id' => $this->user->chat_id, 'message_id' => $this->message_id]);
+
+                    if ($this->message_type == $this->telegram::CALLBACK_QUERY) {
+                        if ($this->text === 'add-tasks-button') {
+                            $this->user->updateSteps(2, 0);
+                            $this->telegram->sendMessage(Message::addTasksSectionMessage($this->user));
+                        }
+
+                        if (is_numeric($this->text)) {
+                            $this->user->updateSteps(3, 1);
+                            (new BotUserLogCreateService($this->user, $this->text))->createByTaskId();
+                            $this->telegram->sendMessage(Message::getActiveTask($this->user->chat_id, $this->text));
+                        }
+                    }
+                }
+
+                if ($this->step_two === 1) {
+                     $this->telegram->deleteMessage(['chat_id' => $this->user->chat_id, 'message_id' => $this->message_id]);
+
+                    if ($this->message_type == $this->telegram::CALLBACK_QUERY) {
+                        if ($this->text === 'delete-button') {
+                             $result = (new BotUserTaskDeleteService($this->user->log->task))->delete();
+                             if ($result) {
+                                $this->telegram->sendMessage(Message::getActiveTask($this->user->chat_id, $this->user->log->bot_user_task_id));
+                             }
+                        }
+
+                        if ($this->text === 'restore-button') {
+                             $result = (new BotUserTaskRestoreService($this->user->log->task))->restore();
+                             if ($result) {
+                                $this->telegram->sendMessage(Message::getActiveTask($this->user->chat_id, $this->user->log->bot_user_task_id));
+                             }
+                        }
+
+                        if ($this->text === 'force-delete-button') {
+                            $result = (new BotUserTaskDeleteService($this->user->log->task))->forceDelete();
+                            if ($result) {
+                                $this->user->updateSteps(3, 0);
+                                $this->telegram->sendMessage(Message::myTasksSectionMessage($this->user));
+                            }
+                        }
+
+                        if ($this->text === 'change-button') {
+                            $this->user->updateSteps(2, 6);
+                            $this->telegram->sendMessage(Message::getTaskChangeMessage($this->user));
                         }
                     }
                 }

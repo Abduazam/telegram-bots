@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\Enums\Bots\General;
+namespace App\Contracts\Enums\Bots\Models\BotUsers;
 
 enum BotUserActiveEnum : int
 {

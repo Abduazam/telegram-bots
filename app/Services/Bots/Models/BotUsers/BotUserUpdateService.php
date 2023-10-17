@@ -2,7 +2,7 @@
 
 namespace App\Services\Bots\Models\BotUsers;
 
-use App\Contracts\Enums\Bots\General\BotUserActiveEnum;
+use App\Contracts\Enums\Bots\Models\BotUsers\BotUserActiveEnum;
 use App\Models\Bots\Users\BotUser;
 
 class BotUserUpdateService
