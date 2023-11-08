@@ -1,7 +1,9 @@
 <?php
 
 return [
-    'tokens' => [
-        'virdlarim' => env('VIRDLARIM_BOT_TOKEN', "6416667461:AAFiFOfTKebr_4lk-Ft0MJ46t2zE3AkLnIY"),
+    'bots' => [
+        'taskable' => [
+            'token' => env('TASKABLE_BOT_TOKEN', "6439359275:AAE-5Lf_JlYFGVNdGn1PsTHPbpUxbIjNhHU")
+        ],
     ],
 ];

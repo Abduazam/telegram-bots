@@ -2,7 +2,7 @@
 
 namespace App\Helpers\Bots\General\Texts;
 
-use App\Models\Bots\BotTexts\BotText;
+use App\Models\Bots\Taskable\BotTexts\BotText;
 
 class GetTextTranslations
 {

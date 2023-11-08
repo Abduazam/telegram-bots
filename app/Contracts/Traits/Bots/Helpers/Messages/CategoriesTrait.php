@@ -11,7 +11,7 @@ trait CategoriesTrait
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('user-add-category-text'),
+            'text' => __('taskable.sections.add-task.add-category.text'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [

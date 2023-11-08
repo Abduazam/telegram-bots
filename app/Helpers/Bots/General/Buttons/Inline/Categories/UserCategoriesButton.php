@@ -2,18 +2,18 @@
 
 namespace App\Helpers\Bots\General\Buttons\Inline\Categories;
 
-use App\Models\Bots\Users\BotUser;
-use App\Repository\Bots\Models\BotCategory\BotCategoryRepository;
+use App\Models\Bots\General\Users\BotUser;
+use App\Repository\Bots\Models\Taskable\Categories\TaskableCategoryRepository;
 
 class UserCategoriesButton
 {
-    protected BotCategoryRepository $repository;
+    protected TaskableCategoryRepository $repository;
 
     public function __construct(
         protected BotUser $user,
         protected array $additionalButtons,
     ) {
-        $this->repository = new BotCategoryRepository();
+        $this->repository = new TaskableCategoryRepository();
     }
 
     public function __invoke(): array

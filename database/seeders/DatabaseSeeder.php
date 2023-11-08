@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Database\Factories\Bots\BotUserTasks\BotUserTaskFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,9 +17,9 @@ class DatabaseSeeder extends Seeder
             Dashboard\Users\AdminSeeder::class,
 
             // BOTS
-            Bots\PhoneNumberCodes\DefaultCountryPhoneNumberCodesSeeder::class,
-            Bots\BotTexts\DefaultBotTextsSeeder::class,
-            Bots\Categories\DefaultBotCategoriesSeeder::class,
+            Bots\General\Bot\DefaultBotSeeder::class,
+            Bots\General\AvailableCountries\DefaultAvailableCountrySeeder::class,
+            Bots\Taskable\DefaultCategoriesSeeder::class,
         ]);
     }
 }

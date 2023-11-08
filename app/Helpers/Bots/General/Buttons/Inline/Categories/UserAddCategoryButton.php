@@ -8,6 +8,6 @@ class UserAddCategoryButton
 {
     public function __invoke(): array
     {
-        return ['text' => GetTextTranslations::getTextTranslation('user-add-category-button'), 'callback_data' => 'user-add-category-button'];
+        return ['text' => __('taskable.sections.add-task.add-category.button'), 'callback_data' => 'add-category-button'];
     }
 }

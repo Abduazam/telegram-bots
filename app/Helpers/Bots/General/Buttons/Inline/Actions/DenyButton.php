@@ -8,6 +8,6 @@ class DenyButton
 {
     public function __invoke(): array
     {
-        return ['text' => GetTextTranslations::getTextTranslation('deny-button'), 'callback_data' => 'deny-button'];
+        return ['text' => __('telegram.request.deny-button'), 'callback_data' => 'deny-button'];
     }
 }

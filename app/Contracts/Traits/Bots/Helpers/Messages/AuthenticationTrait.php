@@ -10,7 +10,7 @@ trait AuthenticationTrait
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('auth-success-text'),
+            'text' => __('telegram.auth.succeed'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'remove_keyboard' => true
@@ -22,7 +22,7 @@ trait AuthenticationTrait
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('auth-failed-text'),
+            'text' => __('telegram.auth.failed'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'remove_keyboard' => true

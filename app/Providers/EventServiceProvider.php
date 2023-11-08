@@ -2,14 +2,13 @@
 
 namespace App\Providers;
 
-use App\Events\Bots\BotUserLog\UpdateBotUserLogToNull;
-use App\Events\Bots\BotUsers\BotUserCreated;
-use App\Listeners\Bots\BotUserLog\UpdateBotUserLogToNullListener;
-use App\Listeners\Bots\BotUsers\BotUserCreatedListener;
 use Illuminate\Auth\Events\Registered;
+use App\Events\Bots\General\BotUsers\BotUserCreated;
+use App\Events\Bots\Taskable\Logs\UpdateTaskableLogToNull;
+use App\Listeners\Bots\General\BotUsers\BotUserCreatedListener;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Listeners\Bots\Taskable\Logs\UpdateTaskableLogToNullListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -25,8 +24,8 @@ class EventServiceProvider extends ServiceProvider
         BotUserCreated::class => [
             BotUserCreatedListener::class,
         ],
-        UpdateBotUserLogToNull::class => [
-            UpdateBotUserLogToNullListener::class,
+        UpdateTaskableLogToNull::class => [
+            UpdateTaskableLogToNullListener::class,
         ],
     ];
 

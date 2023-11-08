@@ -2,8 +2,7 @@
 
 namespace App\Services\Bots\Models\BotUsers;
 
-use App\Models\Bots\Telegram\Telegram;
-use App\Models\Bots\Users\BotUser;
+use App\Models\Bots\General\Users\BotUser;
 
 class BotUserFindService
 {

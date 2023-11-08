@@ -8,6 +8,6 @@ class ConfirmButton
 {
     public function __invoke(): array
     {
-        return ['text' => GetTextTranslations::getTextTranslation('confirm-button'), 'callback_data' => 'confirm-button'];
+        return ['text' => __('telegram.request.confirm-button'), 'callback_data' => 'confirm-button'];
     }
 }

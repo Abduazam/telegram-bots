@@ -2,8 +2,7 @@
 
 namespace App\Contracts\Traits\Bots\Helpers\Messages;
 
-use App\Models\Bots\Users\BotUser;
-use App\Helpers\Bots\General\Texts\GetTextTranslations;
+use App\Models\Bots\General\Users\BotUser;
 use App\Helpers\Bots\General\Buttons\Inline\Actions\BackButton;
 use App\Helpers\Bots\General\Buttons\Inline\Tasks\UserTasksButton;
 use App\Helpers\Bots\General\Buttons\Inline\Tasks\UserAddTaskButton;
@@ -16,13 +15,13 @@ trait ImmutableMessagesTrait
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('main-menu-text'),
+            'text' => __('taskable.main.welcome'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [
-                        ['text' => GetTextTranslations::getTextTranslation('my-tasks-button'), 'callback_data' => 'my-tasks-button'],
-                        ['text' => GetTextTranslations::getTextTranslation('add-tasks-button'), 'callback_data' => 'add-tasks-button']
+                        ['text' => __('taskable.sections.my-tasks.text'), 'callback_data' => 'my-tasks'],
+                        ['text' => __('taskable.sections.add-task.text'), 'callback_data' => 'add-task']
                     ],
                 ],
             ])
@@ -40,7 +39,7 @@ trait ImmutableMessagesTrait
 
         return [
             'chat_id' => $user->chat_id,
-            'text' => GetTextTranslations::getTextTranslation('user-choose-category-text'),
+            'text' => __('taskable.sections.add-task.choose-categories'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => (new UserCategoriesButton($user, $additionalButtons))()

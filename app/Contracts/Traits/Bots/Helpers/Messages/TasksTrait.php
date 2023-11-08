@@ -2,31 +2,31 @@
 
 namespace App\Contracts\Traits\Bots\Helpers\Messages;
 
-use App\Helpers\Bots\General\Buttons\Inline\Tasks\DeleteRestoreButton;
-use App\Helpers\Bots\General\Buttons\Inline\Tasks\ForceDeleteButton;
-use App\Models\Bots\Users\BotUser;
-use App\Models\Bots\Tasks\BotUserTask;
-use App\Models\Bots\Categories\BotCategory;
-use App\Helpers\Bots\General\Texts\GetTextTranslations;
+use App\Models\Bots\General\Users\BotUser;
+use App\Models\Bots\Taskable\Tasks\TaskableTask;
+use App\Services\Bots\Taskable\Logs\TaskableLogCreateService;
 use App\Helpers\Bots\General\Buttons\Inline\Actions\DenyButton;
 use App\Helpers\Bots\General\Buttons\Inline\Actions\BackButton;
 use App\Helpers\Bots\General\Buttons\Inline\Actions\ChangeButton;
-use App\Services\Bots\Models\BotUserLogs\BotUserLogCreateService;
 use App\Helpers\Bots\General\Buttons\Inline\Actions\ConfirmButton;
 use App\Helpers\Bots\General\Buttons\Inline\Actions\NextStepButton;
+use App\Helpers\Bots\General\Buttons\Inline\Tasks\ForceDeleteButton;
+use App\Helpers\Bots\General\Buttons\Inline\Tasks\DeleteRestoreButton;
 use App\Helpers\Bots\General\Buttons\Inline\Categories\UserCategoriesButton;
+use App\Repository\Bots\Models\Taskable\Categories\TaskableCategoryRepository;
 
 trait TasksTrait
 {
     public static function addTaskToCategoryMessage(BotUser $user, string $category_id): array
     {
-        $category = BotCategory::find($category_id);
+        $repository = new TaskableCategoryRepository();
+        $category = $repository->find($category_id);
 
-        (new BotUserLogCreateService($user, $category->id))->createByCategoryId();
+        (new TaskableLogCreateService($user, $category->id))->createByCategoryId();
 
         return [
             'chat_id' => $user->chat_id,
-            'text' => "{$category->getTitle()} " . GetTextTranslations::getTextTranslation('add-task-to-category-text'),
+            'text' => "{$category->getTitle()} " . __('taskable.sections.add-task.adding-task.description'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
@@ -42,7 +42,7 @@ trait TasksTrait
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('add-task-amount-text'),
+            'text' => __('taskable.sections.add-task.adding-task.amount'),
             'parse_mode' => 'html',
         ];
     }
@@ -51,7 +51,7 @@ trait TasksTrait
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('add-task-schedule-text'),
+            'text' => __('taskable.sections.add-task.adding-task.schedule'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
@@ -65,7 +65,7 @@ trait TasksTrait
 
     public static function getTask(BotUser $user): array
     {
-        $text = self::getTaskInfo($user->log->task);
+        $text = self::getTaskInfo($user->taskable_log->task);
 
         return [
             'chat_id' => $user->chat_id,
@@ -87,7 +87,7 @@ trait TasksTrait
 
     public static function getActiveTask(int $chat_id, int $id): array
     {
-        $task = BotUserTask::where('id', $id)->withTrashed()->first();
+        $task = TaskableTask::where('id', $id)->withTrashed()->first();
         $text = self::getTaskInfo($task);
 
         return [
@@ -113,7 +113,7 @@ trait TasksTrait
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('confirmed-text'),
+            'text' => __('telegram.request.confirm-text'),
             'parse_mode' => 'html',
         ];
     }
@@ -122,7 +122,7 @@ trait TasksTrait
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('denied-text'),
+            'text' => __('telegram.request.deny-text'),
             'parse_mode' => 'html',
         ];
     }
@@ -131,28 +131,28 @@ trait TasksTrait
     {
         return [
             'chat_id' => $chat_id,
-            'text' => GetTextTranslations::getTextTranslation('saved-but-not-active-text'),
+            'text' => __('taskable.main.general.saved'),
             'parse_mode' => 'html',
         ];
     }
 
     public static function getTaskChangeMessage(BotUser $user): array
     {
-        $text = self::getTaskInfo($user->log->task);
+        $text = self::getTaskInfo($user->taskable_log->task);
 
         return [
             'chat_id' => $user->chat_id,
-            'text' => "Ўзгартирмоқчи бўлган нарсангизни танланг\n\n$text",
+            'text' => __('taskable.sections.add-task.changing-task.text') . "\n\n$text",
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [
-                        ['text' => 'Вирд номи', 'callback_data' => 'description'],
-                        ['text' => 'Категорияси', 'callback_data' => 'category'],
+                        ['text' => __('taskable.items.task.description'), 'callback_data' => 'description'],
+                        ['text' => __('taskable.items.task.category'), 'callback_data' => 'category'],
                     ],
                     [
-                        ['text' => 'Қиймати', 'callback_data' => 'amount'],
-                        ['text' => 'Эслатиш вақти', 'callback_data' => 'schedule_time'],
+                        ['text' => __('taskable.items.task.amount'), 'callback_data' => 'amount'],
+                        ['text' => __('taskable.items.task.schedule'), 'callback_data' => 'schedule_time'],
                     ],
                     [
                         (new BackButton())()
@@ -162,16 +162,16 @@ trait TasksTrait
         ];
     }
 
-    private static function getTaskInfo(BotUserTask $task): string
+    private static function getTaskInfo(TaskableTask $task): string
     {
-        return "<b>Вирд:</b> {$task->getDescription()}\n<b>Категория:</b> {$task->category->getTitle()}\n<b>Кунлик қиймати:</b> {$task->amount}\n<b>Эслатиш вақти:</b> {$task->getScheduleTime()}";
+        return "<b>" . __('taskable.items.task.description') . ":</b> {$task->getDescription()}\n<b>" . __('taskable.items.task.category') . ":</b> {$task->category->getTitle()}\n<b>" . __('taskable.items.task.amount') . ":</b> {$task->amount}\n<b>" . __('taskable.items.task.schedule') . ":</b> {$task->getScheduleTime()}";
     }
 
     public static function changeTaskDescription(BotUser $user): array
     {
         return [
             'chat_id' => $user->chat_id,
-            'text' => GetTextTranslations::getTextTranslation('change-task-description-text'),
+            'text' => __('taskable.sections.add-task.changing-task.description'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
@@ -187,7 +187,7 @@ trait TasksTrait
     {
         return [
             'chat_id' => $user->chat_id,
-            'text' => GetTextTranslations::getTextTranslation('change-task-amount-text'),
+            'text' => __('taskable.sections.add-task.changing-task.amount'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
@@ -203,7 +203,7 @@ trait TasksTrait
     {
         return [
             'chat_id' => $user->chat_id,
-            'text' => GetTextTranslations::getTextTranslation('change-task-schedule-text'),
+            'text' => __('taskable.sections.add-task.changing-task.schedule'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
@@ -225,7 +225,7 @@ trait TasksTrait
 
         return [
             'chat_id' => $user->chat_id,
-            'text' => GetTextTranslations::getTextTranslation('change-task-category-text'),
+            'text' => __('taskable.sections.add-task.changing-task.category'),
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => (new UserCategoriesButton($user, $additionalButtons))()
@@ -233,8 +233,8 @@ trait TasksTrait
         ];
     }
 
-    public static function getTaskNotificationInfo(BotUserTask $task): string
+    public static function getTaskNotificationInfo(TaskableTask $task): string
     {
-        return "<b>{$task->category->getTitle()}</b> вақти\n\n<b>{$task->getDescription()}\n</b><b>Бажаришингиз керак:</b> {$task->amount}";
+        return "<b>{$task->category->getTitle()}</b>" . __('taskable.sections.add-task.notifying-task.time-of') . "\n\n<b>{$task->getDescription()}\n</b><b>" . __('taskable.sections.add-task.notifying-task.must-do') . ":</b> {$task->amount}";
     }
 }

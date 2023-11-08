@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bot_users', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('bot_id')->references('id')->on('bots')->onDelete('cascade');
             $table->bigInteger('chat_id');
             $table->string('first_name', 75);
             $table->string('username', 75)->nullable();
@@ -21,6 +22,8 @@ return new class extends Migration
             $table->tinyInteger('active')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['bot_id', 'chat_id']);
         });
     }
 

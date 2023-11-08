@@ -2,7 +2,7 @@
 
 namespace App\Services\Bots\General\PhoneNumberChecker;
 
-use App\Models\Bots\PhoneNumberCodes\CountryPhoneNumberCode;
+use App\Models\Bots\General\AvailableCountries\AvailableCountry;
 
 class PhoneNumberCheckService
 {
@@ -12,12 +12,7 @@ class PhoneNumberCheckService
     {
         $phone_number = preg_replace('/\D/', '', $this->phone_number);
         $first_three_digits = substr($phone_number, 0, 3);
-        $country_number = CountryPhoneNumberCode::where('code', $first_three_digits)->first();
 
-        if ($country_number) {
-            return true;
-        }
-
-        return false;
+        return AvailableCountry::where('code', $first_three_digits)->exists();
     }
 }

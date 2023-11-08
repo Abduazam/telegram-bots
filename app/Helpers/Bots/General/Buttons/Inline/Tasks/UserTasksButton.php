@@ -2,8 +2,8 @@
 
 namespace App\Helpers\Bots\General\Buttons\Inline\Tasks;
 
-use App\Models\Bots\Users\BotUser;
 use App\Helpers\Bots\General\Texts\GetTextTranslations;
+use App\Models\Bots\General\Users\BotUser;
 
 class UserTasksButton
 {
@@ -24,7 +24,7 @@ class UserTasksButton
             }
 
             return [
-                'text' => GetTextTranslations::getTextTranslation('my-tasks-empty-text'),
+                'text' => __('telegram.response.empty', ['model' => __('taskable.sections.my-tasks.text')]),
                 'keyboard' => $inlineKeyboard,
             ];
         }
@@ -38,7 +38,8 @@ class UserTasksButton
 
             foreach ($taskGroup as $task) {
                 $taskDescription = base64_decode($task['description']);
-                if (! is_null($task['deleted_at'])) {
+
+                if (!is_null($task['deleted_at'])) {
                     $textTasks .= "{$index}. $taskDescription ❌\n";
                 } else {
                     $textTasks .= "{$index}. $taskDescription\n";
@@ -55,7 +56,7 @@ class UserTasksButton
             $inlineKeyboard[] = $inlineButtons;
         }
 
-        $textTasks = "<b>" . GetTextTranslations::getTextTranslation('my-tasks-text') . "</b>\n\n". $textTasks;
+        $textTasks = "<b>" . __('taskable.sections.my-tasks.text') . "</b>\n\n". $textTasks;
 
         foreach ($this->additionalButtons as $additionalButton) {
             $inlineKeyboard[] = $additionalButton;

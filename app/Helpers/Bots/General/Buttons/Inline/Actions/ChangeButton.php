@@ -8,6 +8,6 @@ class ChangeButton
 {
     public function __invoke(): array
     {
-        return ['text' => GetTextTranslations::getTextTranslation('change-button'), 'callback_data' => 'change-button'];
+        return ['text' => __('telegram.actions.change'), 'callback_data' => 'change-button'];
     }
 }

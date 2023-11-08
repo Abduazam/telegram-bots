@@ -2,17 +2,16 @@
 
 namespace App\Helpers\Bots\General\Buttons\Inline\Tasks;
 
-use App\Models\Bots\Tasks\BotUserTask;
-use App\Helpers\Bots\General\Texts\GetTextTranslations;
+use App\Models\Bots\Taskable\Tasks\TaskableTask;
 
 class DeleteRestoreButton
 {
-    public function __invoke(BotUserTask $task): array
+    public function __invoke(TaskableTask $task): array
     {
         if ($task->trashed()) {
-            return ['text' => GetTextTranslations::getTextTranslation('restore-button'), 'callback_data' => 'restore-button'];
+            return ['text' => __('telegram.crud.restore'), 'callback_data' => 'restore-button'];
         }
 
-        return ['text' => GetTextTranslations::getTextTranslation('delete-button'), 'callback_data' => 'delete-button'];
+        return ['text' => __('telegram.crud.delete'), 'callback_data' => 'delete-button'];
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands\Bots\BotUserTasks;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Console\Command;
-use App\Models\Bots\Tasks\BotUserTask;
-use App\Models\Bots\Telegram\Telegram;
 use App\Helpers\Bots\General\Messages\Message;
+use App\Models\Bots\Taskable\Tasks\BotUserTask;
+use App\Models\Bots\Telegram\Telegram;
+use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 
 class SendTaskNotifications extends Command
 {
