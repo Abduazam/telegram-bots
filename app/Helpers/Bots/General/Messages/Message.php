@@ -2,17 +2,19 @@
 
 namespace App\Helpers\Bots\General\Messages;
 
-use App\Contracts\Traits\Bots\Helpers\Messages\AuthenticationTrait;
-use App\Contracts\Traits\Bots\Helpers\Messages\CategoriesTrait;
-use App\Contracts\Traits\Bots\Helpers\Messages\HandbookTrait;
-use App\Contracts\Traits\Bots\Helpers\Messages\ImmutableMessagesTrait;
-use App\Contracts\Traits\Bots\Helpers\Messages\OperationRequestTrait;
-use App\Contracts\Traits\Bots\Helpers\Messages\RequestButtonsTrait;
 use App\Contracts\Traits\Bots\Helpers\Messages\TasksTrait;
+use App\Contracts\Traits\Bots\Helpers\Messages\SettingsTrait;
+use App\Contracts\Traits\Bots\Helpers\Messages\CategoriesTrait;
+use App\Contracts\Traits\Bots\Helpers\Messages\TariffPlanTrait;
+use App\Contracts\Traits\Bots\Helpers\Messages\RequestButtonsTrait;
+use App\Contracts\Traits\Bots\Helpers\Messages\AuthenticationTrait;
+use App\Contracts\Traits\Bots\Helpers\Messages\ImmutableMessagesTrait;
 
 class Message
 {
     use TasksTrait;
+    use SettingsTrait;
+    use TariffPlanTrait;
     use CategoriesTrait;
     use RequestButtonsTrait;
     use AuthenticationTrait;

@@ -14,10 +14,12 @@ class DefaultCategoriesSeeder extends Seeder
     public function run(): void
     {
         $categories = [
+            'work' => "💼 Ish",
             'sport' => "💪🏻 Sport",
             'movie' => "🎥 Kino",
             'book' => "📚 Kitoblar",
             'lesson' => "📝 Darslar",
+            'personal' => "👤 Shaxsiy",
         ];
 
         foreach ($categories as $key => $value) {

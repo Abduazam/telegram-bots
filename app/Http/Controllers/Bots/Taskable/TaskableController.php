@@ -13,11 +13,11 @@ use App\Services\Bots\Models\BotUsers\BotUserUpdateService;
 use App\Services\Bots\Taskable\Logs\TaskableLogCreateService;
 use App\Helpers\Bots\General\Rules\TaskScheduleTimeCheckRule;
 use App\Services\Bots\Taskable\Tasks\TaskableTaskDeleteService;
-use App\Services\Bots\Taskable\Tasks\TaskableTaskRestoreService;
 use App\Services\Bots\Taskable\Tasks\TaskableTaskUpdateService;
 use App\Services\Bots\Taskable\Tasks\TaskableTaskCreateService;
 use App\Contracts\Enums\Bots\Models\BotUsers\BotUserActiveEnum;
 use App\Services\Bots\General\BotUser\BotUserExistsCheckService;
+use App\Services\Bots\Taskable\Tasks\TaskableTaskRestoreService;
 use App\Services\Bots\Taskable\Categories\TaskableCategoryCreateService;
 use App\Services\Bots\General\PhoneNumberChecker\PhoneNumberCheckService;
 
@@ -53,7 +53,7 @@ class TaskableController extends BotsController
     {
         if ($this->user->isActive()) {
             if ($this->text === '/start') {
-                if ($this->step_one >= 2 and $this->step_two <= 7) {
+                if ($this->step_one === 2 and ($this->step_two >= 2 and $this->step_two <= 7)) {
                     UpdateTaskableLogToNull::dispatch($this->user);
                     $this->telegram->sendMessage(Message::taskSaved($this->user->chat_id));
                 }
@@ -79,6 +79,11 @@ class TaskableController extends BotsController
                     if ($this->text === 'my-tasks') {
                         $this->user->updateSteps(3, 0);
                         $this->telegram->sendMessage(Message::myTasksSectionMessage($this->user));
+                    }
+
+                    if ($this->text === 'settings') {
+                        $this->user->updateSteps(4, 0);
+                        $this->telegram->sendMessage(Message::settingsSectionMessage($this->user->chat_id));
                     }
                 }
             }
@@ -140,6 +145,18 @@ class TaskableController extends BotsController
                     if ($this->step_two === 1) {
                         $this->user->updateSteps(3, 0);
                         $this->telegram->sendMessage(Message::myTasksSectionMessage($this->user));
+                    }
+                }
+
+                if ($this->step_one === 4) {
+                    if ($this->step_two === 0) {
+                        $this->user->updateSteps(1, 0);
+                        $this->telegram->sendMessage(Message::mainMenuMessage($this->user->chat_id));
+                    }
+
+                    if ($this->step_two === 1 or $this->step_two === 2 or $this->step_two === 3) {
+                        $this->user->updateSteps(4, 0);
+                        $this->telegram->sendMessage(Message::settingsSectionMessage($this->user->chat_id));
                     }
                 }
 
@@ -395,6 +412,27 @@ class TaskableController extends BotsController
                         if ($this->text === 'change-button') {
                             $this->user->updateSteps(2, 6);
                             $this->telegram->sendMessage(Message::getTaskChangeMessage($this->user));
+                        }
+                    }
+                }
+            }
+
+            /**
+             * Settings
+             */
+            if ($this->step_one === 4) {
+                if ($this->step_two === 0) {
+                    $this->telegram->deleteMessage(['chat_id' => $this->user->chat_id, 'message_id' => $this->message_id]);
+
+                    if ($this->message_type == $this->telegram::CALLBACK_QUERY) {
+                        if ($this->text === 'tariff-plan') {
+                            $this->user->updateSteps($this->step_one, 2);
+                            $this->telegram->sendMessage(Message::tariffPlanSectionMessage($this->user->chat_id));
+                        }
+
+                        if ($this->text === 'handbook') {
+                            $this->user->updateSteps($this->step_one, 3);
+                            $this->telegram->sendVideo(Message::handbookSectionMessage($this->user->chat_id));
                         }
                     }
                 }

@@ -51,6 +51,13 @@ return [
             ],
             'choose-categories' => "Kategoriya tanlang",
         ],
+        'settings' => [
+            'text' => "Sozlamalar bo'limi",
+            'all-category' => "Kategoriyalar",
+            'all-category-text' => "Sizdagi barcha kategoriyalar ro'yxati",
+            'tariff-plan' => "Tariflar",
+            'handbook' => "Ushbu videoda botdan foydalanish bo'yicha qo'llanmaga ega bo'lishingiz mumkin",
+        ],
     ],
 
     'items' => [
