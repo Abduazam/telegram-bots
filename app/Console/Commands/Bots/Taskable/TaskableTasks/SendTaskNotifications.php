@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Bots\BotUserTasks;
+namespace App\Console\Commands\Bots\Taskable\TaskableTasks;
 
 use App\Helpers\Bots\General\Messages\Message;
 use App\Models\Bots\Taskable\Tasks\BotUserTask;
