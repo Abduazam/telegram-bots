@@ -9,7 +9,7 @@ trait SettingsTrait
 {
     public static function handbookSectionMessage(int $chat_id): array
     {
-        $video = (new MakeFileSendable('http://hilalarabic.uz/storage/lessons/bKNTYLZiXPq89LyJrpYzGdj2GBPiuH6L6b8FWpTD.mp4'))->makeWithPublicUrl();
+        $video = (new MakeFileSendable('http://abduazam.hilalarabic.uz/storage/video.MP4'))->makeWithPublicUrl();
 
         return [
             'chat_id' => $chat_id,
