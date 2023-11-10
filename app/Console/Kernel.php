@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('bot:send-task-notifications')->everyMinute()->runInBackground();
+        $schedule->command('taskable:send-task-notifications')->everyMinute()->runInBackground();
     }
 
     /**

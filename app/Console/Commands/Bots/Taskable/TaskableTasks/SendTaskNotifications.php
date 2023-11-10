@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands\Bots\Taskable\TaskableTasks;
 
-use App\Helpers\Bots\General\Messages\Message;
-use App\Models\Bots\Taskable\Tasks\BotUserTask;
-use App\Models\Bots\Telegram\Telegram;
-use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Console\Command;
+use App\Models\Bots\Telegram\Telegram;
+use App\Helpers\Bots\General\Messages\Message;
+use App\Models\Bots\Taskable\Tasks\TaskableTask;
 
 class SendTaskNotifications extends Command
 {
@@ -15,14 +15,14 @@ class SendTaskNotifications extends Command
      *
      * @var string
      */
-    protected $signature = 'bot:send-task-notifications';
+    protected $signature = 'taskable:send-task-notifications';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Bot: sending users notification of task';
+    protected $description = 'Taskable: sending users notification of task';
 
     /**
      * Execute the console command.
@@ -31,13 +31,13 @@ class SendTaskNotifications extends Command
     {
         $now = Carbon::now()->format('H:i');
 
-        $tasks = BotUserTask::with('user')
+        $tasks = TaskableTask::with('user')
             ->where('schedule_time', $now)
             ->where('active', true)
             ->get();
 
         if ($tasks->isNotEmpty()) {
-            $telegram = new Telegram(config('telegram.tokens.virdlarim'));
+            $telegram = new Telegram(config('telegram.bots.taskable.token'));
 
             $tasks->each(function ($task) use ($telegram) {
                 $text = Message::getTaskNotificationInfo($task);

@@ -25,7 +25,7 @@ class TaskableController extends BotsController
 {
     public function __construct(
         BotRepository $botRepository,
-        BotUserRepository $botUserRepository,
+        BotUserRepository $botUserRepository
     ) {
         parent::__construct();
 
