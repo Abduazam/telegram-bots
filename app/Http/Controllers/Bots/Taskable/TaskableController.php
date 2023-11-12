@@ -432,7 +432,7 @@ class TaskableController extends BotsController
 
                         if ($this->text === 'handbook') {
                             $this->user->updateSteps($this->step_one, 3);
-                            $this->telegram->sendVideo(Message::handbookSectionMessage($this->user->chat_id));
+                            $this->telegram->sendMessage(Message::handbookSectionMessage($this->user->chat_id));
                         }
                     }
                 }
