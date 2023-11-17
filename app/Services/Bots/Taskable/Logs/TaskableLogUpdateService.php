@@ -22,4 +22,11 @@ class TaskableLogUpdateService
             'taskable_task_id' => $task_id,
         ]);
     }
+
+    public function updateSectionName(string $section_name): void
+    {
+        $this->log->update([
+            'section_name' => $section_name,
+        ]);
+    }
 }

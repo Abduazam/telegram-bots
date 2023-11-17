@@ -24,6 +24,7 @@ class UpdateTaskableLogToNullListener
         $event->user->taskable_log->update([
             'taskable_category_id' => null,
             'taskable_task_id' => null,
+            'section_name' => null,
         ]);
     }
 }

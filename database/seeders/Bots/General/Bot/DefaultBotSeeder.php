@@ -2,9 +2,8 @@
 
 namespace Database\Seeders\Bots\General\Bot;
 
-use App\Models\Bots\General\Bots\Bot;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Bots\General\Bots\Bot;
 
 class DefaultBotSeeder extends Seeder
 {
@@ -17,7 +16,7 @@ class DefaultBotSeeder extends Seeder
             [
                 'name' => "Taskable",
                 'username' => "taskablebot",
-                'token' => "6439359275:AAE-5Lf_JlYFGVNdGn1PsTHPbpUxbIjNhHU",
+                'token' => config('telegram.bots.taskable.token'),
             ],
         ];
 

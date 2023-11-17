@@ -9,31 +9,41 @@ class TaskableLogCreateService
 {
     public function __construct(
         protected BotUser $user,
-        protected int $id,
+        protected int|string $value,
     ) { }
 
     public function createByCategoryId(): void
     {
-        $log = TaskableLog::where('bot_user_id', $this->user->id)->first();
-        if ($log) {
-            (new TaskableLogUpdateService($log))->updateCategoryId($this->id);
+        if ($this->user->taskable_log) {
+            (new TaskableLogUpdateService($this->user->taskable_log))->updateCategoryId($this->value);
         } else {
             TaskableLog::create([
                 'bot_user_id' => $this->user->id,
-                'taskable_category_id' => $this->id,
+                'taskable_category_id' => $this->value,
             ]);
         }
     }
 
     public function createByTaskId(): void
     {
-        $log = TaskableLog::where('bot_user_id', $this->user->id)->first();
-        if ($log) {
-            (new TaskableLogUpdateService($log))->updateTaskId($this->id);
+        if ($this->user->taskable_log) {
+            (new TaskableLogUpdateService($this->user->taskable_log))->updateTaskId($this->value);
         } else {
             TaskableLog::create([
                 'bot_user_id' => $this->user->id,
-                'taskable_task_id' => $this->id,
+                'taskable_task_id' => $this->value,
+            ]);
+        }
+    }
+
+    public function createBySectionName(): void
+    {
+        if ($this->user->taskable_log) {
+            (new TaskableLogUpdateService($this->user->taskable_log))->updateSectionName($this->value);
+        } else {
+            TaskableLog::create([
+                'bot_user_id' => $this->user->id,
+                'section_name' => $this->value,
             ]);
         }
     }

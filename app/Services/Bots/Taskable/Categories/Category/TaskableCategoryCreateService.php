@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Bots\Taskable\Categories;
+namespace App\Services\Bots\Taskable\Categories\Category;
 
-use Exception;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 use App\Models\Bots\General\Users\BotUser;
 use App\Models\Bots\Taskable\Categories\TaskableCategory;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TaskableCategoryCreateService
 {

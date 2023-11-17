@@ -8,6 +8,7 @@ use App\Helpers\Bots\General\Buttons\Inline\Tasks\UserTasksButton;
 use App\Helpers\Bots\General\Buttons\Inline\Tasks\UserAddTaskButton;
 use App\Helpers\Bots\General\Buttons\Inline\Categories\UserCategoriesButton;
 use App\Helpers\Bots\General\Buttons\Inline\Categories\UserAddCategoryButton;
+use App\Helpers\Bots\General\Buttons\Inline\Categories\UserCategoriesListButton;
 
 trait ImmutableMessagesTrait
 {
@@ -24,6 +25,7 @@ trait ImmutableMessagesTrait
                         ['text' => __('taskable.sections.add-task.text'), 'callback_data' => 'add-task']
                     ],
                     [
+                        ['text' => __('taskable.sections.my-categories.text'), 'callback_data' => 'my-categories'],
                         ['text' => __('telegram.sections.settings'), 'callback_data' => 'settings'],
                     ],
                 ],
@@ -87,6 +89,27 @@ trait ImmutableMessagesTrait
                         (new BackButton())(),
                     ],
                 ]
+            ])
+        ];
+    }
+
+    public static function myCategoriesSectionMessage(BotUser $user): array
+    {
+        $additionalButtons = [
+            [
+                (new BackButton())(),
+                (new UserAddCategoryButton())(),
+            ],
+        ];
+
+        $response = (new UserCategoriesListButton($user, $additionalButtons))();
+
+        return [
+            'chat_id' => $user->chat_id,
+            'text' => $response['text'],
+            'parse_mode' => 'html',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $response['keyboard']
             ])
         ];
     }

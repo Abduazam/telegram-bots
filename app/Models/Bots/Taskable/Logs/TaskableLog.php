@@ -14,6 +14,7 @@ use App\Models\Bots\Taskable\Categories\TaskableCategory;
  * @property int $bot_user_id
  * @property int $taskable_category_id
  * @property int $taskable_task_id
+ * @property string $section_name
  *
  * Relations
  * @property BelongsTo $user
@@ -28,6 +29,7 @@ class TaskableLog extends Model
         'bot_user_id',
         'taskable_category_id',
         'taskable_task_id',
+        'section_name',
     ];
 
     /**

@@ -12,40 +12,41 @@ return [
     */
 
     'actions' => [
-        'back' => "Orqaga",
-        'next' => "Keyingisi",
-        'change' => "O'zgartirish",
+        'back' => "🔙 Orqaga",
+        'next' => "🔜 Keyingisi",
+        'change' => "♻️ O'zgartirish",
     ],
 
     'request' => [
         'phone-number-text' => "Telefon raqamingizni kiriting",
-        'phone-number-button' => "Raqam jo'natish",
+        'phone-number-button' => "📞 Raqam jo'natish",
         'location-text' => "Manzilingizni kiriting",
-        'location-button' => "Manzil jo'natish",
-        'confirming-deny-text' => "Amaliyotni to'xtatishni?",
+        'location-button' => "📍 Manzil jo'natish",
+        'confirming-deny-text' => "❔ Amaliyotni to'xtatishni?",
         'cancel-button' => "Bekor qilish",
-        'cancel-text' => "Bekor qilindi",
+        'cancel-text' => "❌ Bekor qilindi",
         'confirm-button' => "Tasdiqlash",
-        'confirm-text' => "Tasdiqlandi",
+        'confirm-text' => "✅ Tasdiqlandi",
         'deny-button' => "Rad qilish",
         'deny-text' => "Rad qilindi",
+        'force-delete-text' => "❓ Haqiqatdan o'chirishni istaysizmi?",
     ],
 
     'auth' => [
-        'succeed' => "Ro'yxatdan muvaffaqiyatli o'tdingiz",
-        'failed' => "Ro'yxatdan o'tolmadingiz",
+        'succeed' => "🎉 Ro'yxatdan muvaffaqiyatli o'tdingiz",
+        'failed' => "😔 Ro'yxatdan o'tolmadingiz",
     ],
 
     'sections' => [
-        'handbook' => "Qo'llanma",
-        'settings' => "Sozlamalar",
+        'handbook' => "📒 Qo'llanma",
+        'settings' => "⚙️ Sozlamalar",
     ],
 
     'crud' => [
         'delete' => "Nofaollashtirish",
         'restore' => "Faollashtirish",
-        'force-delete' => "O'chirish",
-        'create' => ":attribute qo'shish",
+        'force-delete' => "🚮 O'chirish",
+        'create' => "➕ :attribute qo'shish",
     ],
 
     'response' => [

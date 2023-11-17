@@ -3,6 +3,7 @@
 namespace App\Helpers\Bots\General\Buttons\Inline\Categories;
 
 use App\Models\Bots\General\Users\BotUser;
+use App\Models\Bots\Taskable\Categories\TaskableCategory;
 use App\Repository\Bots\Models\Taskable\Categories\TaskableCategoryRepository;
 
 class UserCategoriesButton
@@ -18,10 +19,18 @@ class UserCategoriesButton
 
     public function __invoke(): array
     {
-        $categories = $this->repository->getBotCategories()->toArray();
-        $userCategories = $this->repository->getUserBotCategories($this->user->id)->toArray();
+        $user_id = $this->user->id;
 
-        $allCategories = array_merge($categories, $userCategories);
+        $allCategories = TaskableCategory::select('id', 'title')
+            ->whereNotIn('id', function ($query) use ($user_id) {
+                $query->select('taskable_category_id')
+                    ->from('taskable_inactive_categories')
+                    ->where('bot_user_id', $user_id);
+            })
+            ->whereNull('bot_user_id')
+            ->orWhere('bot_user_id', $this->user->id)
+            ->get()
+            ->toArray();
 
         if (count($allCategories) > 0) {
             $chunkedCategories = array_chunk($allCategories, 3);

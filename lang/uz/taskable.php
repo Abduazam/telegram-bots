@@ -25,12 +25,12 @@ return [
 
     'sections' => [
         'my-tasks' => [
-            'text' => "Mening vazifalarim",
+            'text' => "📌 Mening vazifalarim",
         ],
         'add-task' => [
-            'text' => "Vazifa qo'shish",
+            'text' => "➕ Vazifa qo'shish",
             'add-category' => [
-                'button' => "Kategoriya qo'shish",
+                'button' => "➕ Kategoriya qo'shish",
                 'text' => "Kategoriya nomini kiriting",
             ],
             'adding-task' => [
@@ -47,16 +47,20 @@ return [
             ],
             'notifying-task' => [
                 'time-of' => "vaqti",
-                'must-do' => "Bajarishingi kerak",
+                'must-do' => "Bajarishingiz kerak",
             ],
             'choose-categories' => "Kategoriya tanlang",
         ],
         'settings' => [
             'text' => "Sozlamalar bo'limi",
-            'all-category' => "Kategoriyalar",
-            'all-category-text' => "Sizdagi barcha kategoriyalar ro'yxati",
-            'tariff-plan' => "Tariflar",
+            'tariff-plan' => "🆓 Tariflar",
             'handbook' => "Ushbu videoda botdan foydalanish bo'yicha qo'llanmaga ega bo'lishingiz mumkin",
+        ],
+        'my-categories' => [
+            'text' => "🗂 Mening kategoriyalarim",
+            'changing-category' => [
+                'title' => "Kategoriya nomini o'zgartirishingiz mumkin",
+            ],
         ],
     ],
 
@@ -67,5 +71,9 @@ return [
             'amount' => "Qiymati",
             'schedule' => "Eslatish vaqti",
         ],
+        'category' => [
+            'title' => "Kategoriya nomi",
+            'tasks-count' => "Vazifalar soni",
+        ]
     ],
 ];

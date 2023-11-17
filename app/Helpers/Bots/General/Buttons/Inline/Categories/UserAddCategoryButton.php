@@ -2,8 +2,6 @@
 
 namespace App\Helpers\Bots\General\Buttons\Inline\Categories;
 
-use App\Helpers\Bots\General\Texts\GetTextTranslations;
-
 class UserAddCategoryButton
 {
     public function __invoke(): array

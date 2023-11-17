@@ -235,6 +235,26 @@ trait TasksTrait
 
     public static function getTaskNotificationInfo(TaskableTask $task): string
     {
-        return "<b>{$task->category->getTitle()}</b>" . __('taskable.sections.add-task.notifying-task.time-of') . "\n\n<b>{$task->getDescription()}\n</b><b>" . __('taskable.sections.add-task.notifying-task.must-do') . ":</b> {$task->amount}";
+        return "<b>{$task->category->getTitle()}</b> " . __('taskable.sections.add-task.notifying-task.time-of') . "\n\n<b>{$task->getDescription()}\n</b><b>" . __('taskable.sections.add-task.notifying-task.must-do') . ":</b> {$task->amount}";
+    }
+
+    public static function confirmDeletingTask(int $chat_id): array
+    {
+        return [
+            'chat_id' => $chat_id,
+            'text' => __('telegram.request.force-delete-text'),
+            'parse_mode' => 'html',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => [
+                    [
+                        (new DenyButton())(),
+                        (new ConfirmButton())(),
+                    ],
+                    [
+                        (new BackButton())()
+                    ],
+                ],
+            ])
+        ];
     }
 }
