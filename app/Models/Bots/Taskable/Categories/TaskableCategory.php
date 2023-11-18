@@ -43,8 +43,8 @@ class TaskableCategory extends Model
     /**
      * Accesses to category's tasks.
      */
-    public function tasks(): HasMany
+    public function tasks(int $user_id): HasMany
     {
-        return $this->hasMany(TaskableTask::class, 'taskable_category_id');
+        return $this->hasMany(TaskableTask::class, 'taskable_category_id')->where('bot_user_id', $user_id);
     }
 }

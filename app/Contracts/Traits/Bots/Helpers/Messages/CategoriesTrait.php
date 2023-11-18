@@ -45,7 +45,7 @@ trait CategoriesTrait
 
         return [
             'chat_id' => $user->chat_id,
-            'text' => "<b>" . __('taskable.items.category.title') . ":</b> {$category->getTitle()}\n<b>" . __('taskable.items.category.tasks-count') . ":</b> {$category->tasks->count()}",
+            'text' => "<b>" . __('taskable.items.category.title') . ":</b> {$category->getTitle()}\n<b>" . __('taskable.items.category.tasks-count') . ":</b> {$category->tasks($user->id)->count()}",
             'parse_mode' => 'html',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
