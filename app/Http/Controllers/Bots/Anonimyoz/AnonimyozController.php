@@ -55,6 +55,7 @@ class AnonimyozController extends BotsController
             }
         } else {
             if ($this->text === '/start') {
+                (new AnonimyozChatCreate($this->user, null))();
                 UpdateReceiverIdToNull::dispatch($this->user);
                 $this->telegram->sendMessage(AnonimyozMessages::welcomeMessage($this->user));
             } else if ($this->text === '/username') {

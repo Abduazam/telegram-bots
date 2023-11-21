@@ -10,7 +10,7 @@ use App\Services\Bots\Anonimyoz\Chats\Update\AnonimyozChatUpdate;
 class AnonimyozChatCreate
 {
     protected BotUser $sender;
-    protected ?BotUser $receiver;
+    protected ?BotUser $receiver = null;
 
     public function __construct(BotUser $sender, $receiver)
     {
@@ -18,8 +18,10 @@ class AnonimyozChatCreate
         if (is_numeric($receiver)) {
             $this->receiver = BotUser::findOrFail($receiver);
         } else {
-            $chat = AnonimyozChat::with('sender')->where('sender_username', $receiver)->first();
-            $this->receiver = $chat->sender;
+            if (!is_null($receiver)) {
+                $chat = AnonimyozChat::with('sender')->where('sender_username', $receiver)->first();
+                $this->receiver = $chat->sender;
+            }
         }
     }
 
@@ -36,7 +38,7 @@ class AnonimyozChatCreate
             try {
                 AnonimyozChat::create([
                     'sender_id' => $this->sender->id,
-                    'receiver_id' => $this->receiver->id,
+                    'receiver_id' => !is_null($this->receiver) ? $this->receiver->id : null,
                 ]);
 
                 return true;

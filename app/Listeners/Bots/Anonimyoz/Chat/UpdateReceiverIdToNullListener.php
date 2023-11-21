@@ -21,7 +21,7 @@ class UpdateReceiverIdToNullListener
      */
     public function handle(UpdateReceiverIdToNull $event): void
     {
-        $event->user->chat->update([
+        $event->user->chat?->update([
             'receiver_id' => null,
         ]);
     }
