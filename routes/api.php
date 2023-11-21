@@ -15,4 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/bots/taskable/index', [\App\Http\Controllers\Bots\Taskable\TaskableController::class, 'index'])->name('bots.taskable.index');
+Route::post('/bots/anonimyoz/index', [\App\Http\Controllers\Bots\Anonimyoz\AnonimyozController::class, 'index'])->name('bots.anonimyoz.index');
 

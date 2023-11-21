@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\Bots\Anonimyoz\Chat\UpdateReceiverIdToNull;
+use App\Listeners\Bots\Anonimyoz\Chat\UpdateReceiverIdToNullListener;
 use Illuminate\Auth\Events\Registered;
 use App\Events\Bots\General\BotUsers\BotUserCreated;
 use App\Events\Bots\Taskable\Logs\UpdateTaskableLogToNull;
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         UpdateTaskableLogToNull::class => [
             UpdateTaskableLogToNullListener::class,
+        ],
+        UpdateReceiverIdToNull::class => [
+            UpdateReceiverIdToNullListener::class,
         ],
     ];
 

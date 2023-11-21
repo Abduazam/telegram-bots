@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\Bots\General\Rules;
+namespace App\Helpers\Bots\Taskable\Rules;
 
 class TaskScheduleTimeCheckRule
 {

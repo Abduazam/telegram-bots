@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers\Bots\Taskable;
 
-use App\Models\Bots\Telegram\Telegram;
-use App\Http\Controllers\Bots\BotsController;
+use App\Contracts\Enums\Bots\Models\BotUsers\BotUserActiveEnum;
+use App\Events\Bots\Taskable\Logs\UpdateTaskableLogToNull;
 use App\Helpers\Bots\General\Messages\Message;
+use App\Helpers\Bots\Taskable\Rules\TaskScheduleTimeCheckRule;
+use App\Http\Controllers\Bots\BotsController;
+use App\Models\Bots\Telegram\Telegram;
 use App\Repository\Bots\Models\General\BotRepository;
 use App\Repository\Bots\Models\General\BotUserRepository;
-use App\Events\Bots\Taskable\Logs\UpdateTaskableLogToNull;
-use App\Services\Bots\Models\BotUsers\BotUserCreateService;
-use App\Services\Bots\Models\BotUsers\BotUserUpdateService;
-use App\Helpers\Bots\General\Rules\TaskScheduleTimeCheckRule;
-use App\Services\Bots\Taskable\Logs\TaskableLogCreateService;
-use App\Contracts\Enums\Bots\Models\BotUsers\BotUserActiveEnum;
-use App\Services\Bots\Taskable\Tasks\TaskableTaskCreateService;
-use App\Services\Bots\Taskable\Tasks\TaskableTaskDeleteService;
-use App\Services\Bots\Taskable\Tasks\TaskableTaskUpdateService;
-use App\Services\Bots\Taskable\Tasks\TaskableTaskRestoreService;
 use App\Services\Bots\General\BotUser\BotUserExistsCheckService;
 use App\Services\Bots\General\PhoneNumberChecker\PhoneNumberCheckService;
+use App\Services\Bots\Models\BotUsers\BotUserCreateService;
+use App\Services\Bots\Models\BotUsers\BotUserUpdateService;
 use App\Services\Bots\Taskable\Categories\Category\TaskableCategoryCreateService;
-use App\Services\Bots\Taskable\Categories\Category\TaskableCategoryUpdateService;
 use App\Services\Bots\Taskable\Categories\Category\TaskableCategoryDeleteService;
+use App\Services\Bots\Taskable\Categories\Category\TaskableCategoryUpdateService;
 use App\Services\Bots\Taskable\Categories\InactiveCategory\TaskableInactiveCategoryCreateService;
 use App\Services\Bots\Taskable\Categories\InactiveCategory\TaskableInactiveCategoryDeleteService;
+use App\Services\Bots\Taskable\Logs\TaskableLogCreateService;
+use App\Services\Bots\Taskable\Tasks\TaskableTaskCreateService;
+use App\Services\Bots\Taskable\Tasks\TaskableTaskDeleteService;
+use App\Services\Bots\Taskable\Tasks\TaskableTaskRestoreService;
+use App\Services\Bots\Taskable\Tasks\TaskableTaskUpdateService;
 
 class TaskableController extends BotsController
 {
@@ -31,7 +31,9 @@ class TaskableController extends BotsController
         BotRepository $botRepository,
         BotUserRepository $botUserRepository
     ) {
-        parent::__construct();
+        if (app()->runningInConsole()) {
+            return;
+        }
 
         $bot_token = config('telegram.bots.taskable.token');
         $this->bot = $botRepository->findByToken($bot_token);

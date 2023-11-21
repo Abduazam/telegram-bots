@@ -16,6 +16,20 @@ use Illuminate\Support\Facades\Route;
 /**
  * Dashboard routes.
  */
-Route::group(['middleware' => ['auth', 'verified']], function () {
+Route::redirect('/', '/dashboard');
+
+Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Dashboard\Home\HomeController::class, 'index'])->name('home');
-});
+
+    Route::prefix('bots')->name('bots.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Dashboard\Bots\BotController::class, 'index'])->name('index');
+
+        Route::prefix('taskablebot')->name('taskablebot.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Dashboard\Bots\Taskable\TaskableController::class, 'index'])->name('index');
+
+            Route::prefix('users')->name('users.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Dashboard\Bots\Taskable\Users\TaskableUsersController::class, 'index'])->name('index');
+            });
+        });
+    });
+})->middleware(['auth', 'verified']);

@@ -12,16 +12,9 @@ class BotsController extends Controller
     protected Telegram $telegram;
     protected BotUser $user;
     protected Bot $bot;
-    protected ?string $text;
+    protected null|string $text;
     protected int $message_id;
     protected string|bool $message_type;
     protected int $step_one;
     protected int $step_two;
-
-    protected function __construct()
-    {
-        if (app()->runningInConsole()) {
-            return;
-        }
-    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Bots\General\Users;
 
+use App\Models\Bots\Anonimyoz\Chat\AnonimyozChat;
 use App\Models\Bots\General\Bots\Bot;
 use App\Models\Bots\Taskable\Logs\TaskableLog;
 use App\Models\Bots\Taskable\Tasks\TaskableTask;
@@ -30,6 +31,7 @@ use App\Models\Bots\General\Users\Traits\BotUserMethods;
  * @property HasOne $steps
  * @property HasMany $tasks
  * @property TaskableLog $taskable_log
+ * @property AnonimyozChat $chat
  */
 class BotUser extends Model
 {
@@ -89,5 +91,10 @@ class BotUser extends Model
     public function tasks(): HasMany
     {
         return $this->hasMany(TaskableTask::class)->withTrashed();
+    }
+
+    public function chat(): HasOne
+    {
+        return $this->hasOne(AnonimyozChat::class, 'sender_id');
     }
 }

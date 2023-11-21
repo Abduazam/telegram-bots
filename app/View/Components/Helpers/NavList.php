@@ -4,27 +4,23 @@ namespace App\View\Components\Helpers;
 
 use Closure;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use Illuminate\View\Component;
+use App\Repository\Bots\Models\General\BotRepository;
 
 class NavList extends Component
 {
-    protected Request $request;
     /**
      * Create a new component instance.
      */
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
+    public function __construct(protected BotRepository $botRepository) { }
 
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): View
     {
         return view('components.helpers.nav-list', [
-            'request' => $this->request
+            'bots' => $this->botRepository->getAll(),
         ]);
     }
 }

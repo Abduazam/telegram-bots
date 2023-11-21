@@ -18,6 +18,11 @@ class DefaultBotSeeder extends Seeder
                 'username' => "taskablebot",
                 'token' => config('telegram.bots.taskable.token'),
             ],
+            [
+                'name' => "Anonimyoz",
+                'username' => "anonimyozbot",
+                'token' => config('telegram.bots.anonimyoz.token'),
+            ],
         ];
 
         foreach ($bots as $bot) {

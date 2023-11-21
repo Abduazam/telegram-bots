@@ -20,6 +20,7 @@ class AdminSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('123'),
+            'email_verified_at' => now(),
         ]);
 
         $user->assignRole($role);
