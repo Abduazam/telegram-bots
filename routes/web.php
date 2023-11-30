@@ -31,5 +31,13 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
                 Route::get('/', [\App\Http\Controllers\Dashboard\Bots\Taskable\Users\TaskableUsersController::class, 'index'])->name('index');
             });
         });
+
+        Route::prefix('anonimyozbot')->name('anonimyozbot.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Dashboard\Bots\Anonimyoz\AnonimyozController::class, 'index'])->name('index');
+
+            Route::prefix('users')->name('users.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Dashboard\Bots\Anonimyoz\Users\AnonimyozUsersController::class, 'index'])->name('index');
+            });
+        });
     });
 })->middleware(['auth', 'verified']);

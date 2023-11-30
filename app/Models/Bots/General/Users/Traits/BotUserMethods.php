@@ -21,7 +21,25 @@ trait BotUserMethods
      */
     public function getUsername(): string
     {
-        return base64_decode($this->username);
+        return $this->username ? '<a href="https://t.me/' . base64_decode($this->username) . '" target="_blank">' . base64_decode($this->username) . '</a>' : '';
+    }
+
+    /**
+     * Bot user's status attribute getter.
+     *
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        if ($this->isBlocked()) {
+            $message = '<span class="btn btn-sm btn-alt-danger"><small>Blocked</small></span>';
+        } else if ($this->isInactive()) {
+            $message = '<span class="btn btn-sm btn-alt-warning"><small>Inactive</small></span>';
+        } else {
+            $message = '<span class="btn btn-sm btn-alt-success"><small>Active</small></span>';
+        }
+
+        return $message;
     }
 
     /**

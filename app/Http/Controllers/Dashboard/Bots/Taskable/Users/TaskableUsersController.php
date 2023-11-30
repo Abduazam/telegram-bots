@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Dashboard\Bots\Taskable\Users;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Dashboard\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class TaskableUsersController extends Controller
+class TaskableUsersController extends DashboardController
 {
     /**
      * Display a listing of the resource.

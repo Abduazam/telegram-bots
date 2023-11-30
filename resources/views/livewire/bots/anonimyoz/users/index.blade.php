@@ -9,9 +9,6 @@
                     <!-- Filters -->
                     <div class="row w-100 h-100 p-0 m-0">
                         <div class="col-md-3 col-6 ps-0">
-                            <x-helpers.active-inactive />
-                        </div>
-                        <div class="col-md-3 col-6 ps-0 pe-4">
                             <x-helpers.per-page />
                         </div>
                     </div>
@@ -33,7 +30,7 @@
                 </thead>
                 <tbody>
                 @foreach($users as $user)
-                    <tr wire:key="language-row-{{ $user->id }}">
+                    <tr wire:key="user-row-{{ $user->id }}">
                         <td class="text-center">{{ $user->id }}</td>
                         <td class="text-center">{{ $user->chat_id }}</td>
                         <td class="text-center">{{ $user->getFirstName() }}</td>
