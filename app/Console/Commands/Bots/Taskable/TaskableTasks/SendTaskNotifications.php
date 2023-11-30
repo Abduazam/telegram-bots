@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Bots\Taskable\TaskableTasks;
 
+use App\Helpers\Bots\Taskable\Buttons\Inline\Actions\TaskDoneButton;
 use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
 use App\Models\Bots\Telegram\Telegram;
@@ -46,6 +47,13 @@ class SendTaskNotifications extends Command
                     'chat_id' => $task->user->chat_id,
                     'text' => $text,
                     'parse_mode' => 'html',
+                    'reply_markup' => json_encode([
+                        'inline_keyboard' => [
+                            [
+                                (new TaskDoneButton($task->id))()
+                            ],
+                        ],
+                    ])
                 ]);
             });
         }

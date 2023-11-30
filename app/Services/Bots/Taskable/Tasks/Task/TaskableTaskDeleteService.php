@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Bots\Taskable\Tasks;
+namespace App\Services\Bots\Taskable\Tasks\Task;
 
+use App\Models\Bots\Taskable\Tasks\TaskableTask;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use App\Models\Bots\Taskable\Tasks\TaskableTask;
 
 class TaskableTaskDeleteService
 {

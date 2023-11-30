@@ -9,6 +9,7 @@ use App\Contracts\Traits\Bots\Helpers\Messages\TariffPlanTrait;
 use App\Contracts\Traits\Bots\Helpers\Messages\RequestButtonsTrait;
 use App\Contracts\Traits\Bots\Helpers\Messages\AuthenticationTrait;
 use App\Contracts\Traits\Bots\Helpers\Messages\ImmutableMessagesTrait;
+use App\Models\Bots\General\Users\BotUser;
 
 class Message
 {

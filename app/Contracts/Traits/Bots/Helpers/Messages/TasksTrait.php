@@ -233,9 +233,15 @@ trait TasksTrait
         ];
     }
 
-    public static function getTaskNotificationInfo(TaskableTask $task): string
+    public static function getTaskNotificationInfo(TaskableTask $task, bool $category = true): string
     {
-        return "<b>{$task->category->getTitle()}</b> " . __('taskable.sections.add-task.notifying-task.time-of') . "\n\n<b>{$task->getDescription()}\n</b><b>" . __('taskable.sections.add-task.notifying-task.must-do') . ":</b> {$task->amount}";
+        $message = "<b>{$task->getDescription()}\n</b><b>" . __('taskable.sections.add-task.notifying-task.must-do') . ":</b> {$task->amount}";
+
+        if ($category) {
+            $message = "<b>{$task->category->getTitle()}</b> " . __('taskable.sections.add-task.notifying-task.time-of') . "\n\n" . $message;
+        }
+
+        return $message;
     }
 
     public static function confirmDeletingTask(int $chat_id): array
@@ -255,6 +261,42 @@ trait TasksTrait
                     ],
                 ],
             ])
+        ];
+    }
+
+    public static function taskCompleteMessage(BotUser $user, int $task_id): array
+    {
+        $task = TaskableTask::findOrFail($task_id);
+
+        return [
+            'chat_id' => $user->chat_id,
+            'text' => self::getTaskNotificationInfo($task, false) . "\n\n" . __('taskable.sections.task-done.done-count'),
+            'parse_mode' => 'html',
+        ];
+    }
+
+    public static function taskCountSaved(BotUser $user, int $done_amount): array
+    {
+        $emojis = [
+            'equal' => ["🥳", "🤩", "⚡️", "😎", "🥇"],
+            'less' => ["🤗", "🤓", "👏🏻", "🌞"],
+            'greater' => ["🤯", "💥", "🔥", "🏆"]
+        ];
+
+        $taskAmount = $user->taskable_log->task->amount;
+
+        if ($done_amount === $taskAmount) {
+            $emoji = $emojis['equal'][array_rand($emojis['equal'])];
+        } elseif ($done_amount < $taskAmount) {
+            $emoji = $emojis['less'][array_rand($emojis['less'])];
+        } else {
+            $emoji = $emojis['greater'][array_rand($emojis['greater'])];
+        }
+
+        return [
+            'chat_id' => $user->chat_id,
+            'text' => $emoji,
+            'parse_mode' => 'html',
         ];
     }
 }

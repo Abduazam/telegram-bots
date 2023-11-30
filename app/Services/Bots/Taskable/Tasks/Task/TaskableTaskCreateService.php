@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Bots\Taskable\Tasks;
+namespace App\Services\Bots\Taskable\Tasks\Task;
 
-use Exception;
-use Illuminate\Support\Facades\DB;
 use App\Models\Bots\General\Users\BotUser;
 use App\Models\Bots\Taskable\Tasks\TaskableTask;
 use App\Services\Bots\Taskable\Logs\TaskableLogUpdateService;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class TaskableTaskCreateService
 {

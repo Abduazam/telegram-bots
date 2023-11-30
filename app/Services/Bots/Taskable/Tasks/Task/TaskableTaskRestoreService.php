@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Bots\Taskable\Tasks;
+namespace App\Services\Bots\Taskable\Tasks\Task;
 
-use Mockery\Exception;
-use Illuminate\Support\Facades\DB;
 use App\Models\Bots\Taskable\Tasks\TaskableTask;
+use Illuminate\Support\Facades\DB;
+use Mockery\Exception;
 
 class TaskableTaskRestoreService
 {

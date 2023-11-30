@@ -21,6 +21,10 @@ return [
             'saved' => "Qoʻshilayotgan maʼlumotlar saqlandi. Ammo faol emas.",
             'its-time' => "vaqti",
         ],
+
+        'buttons' => [
+            'task-done' => "🎯 Bajardim",
+        ]
     ],
 
     'sections' => [
@@ -62,6 +66,9 @@ return [
                 'title' => "Kategoriya nomini o'zgartirishingiz mumkin",
             ],
         ],
+        'task-done' => [
+            'done-count' => "Bajargan qiymatingizni kiriting",
+        ]
     ],
 
     'items' => [
