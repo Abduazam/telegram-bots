@@ -8,5 +8,8 @@ return [
         'anonimyoz' => [
             'token' => env('ANONIMYOZ_BOT_TOKEN'),
         ],
+        'europharm' => [
+            'token' => env('EUROPHARM_BOT_TOKEN'),
+        ]
     ],
 ];
